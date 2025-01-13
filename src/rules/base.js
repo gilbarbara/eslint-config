@@ -36,25 +36,5 @@ module.exports = {
     { blankLine: 'never', prev: 'case', next: 'block-like' },
     { blankLine: 'always', prev: '*', next: 'return' },
   ],
-  'simple-import-sort/imports': [
-    'error',
-    {
-      groups: [
-        ['^\\u0000'], // Side effect imports
-        ['^node', `^(${require('module').builtinModules.join('|')})(/|$)`],
-        ['^react$', '^react-dom$', '^react', '^@?(?!test/)\\w'],
-        ['^~$'],
-        ['^~/config'],
-        ['^~/hooks'],
-        ['^~/modules'],
-        ['^~/actions', '^~/literals', '^~/reducers', '^~/services', '^~/sagas'],
-        ['^~/components', '^~/containers', '^~/routes'],
-        ['^~', '^src'],
-        ['^test/\\w'],
-        ['^\\./[^.]'], // './*'
-        ['^\\.\\./'], // '../*'
-      ],
-    },
-  ],
   'sort-destructure-keys/sort-destructure-keys': ['error', { caseSensitive: false }],
 };

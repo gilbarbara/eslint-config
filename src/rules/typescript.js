@@ -3,15 +3,6 @@ module.exports = {
   '@typescript-eslint/consistent-type-assertions': 'warn',
   '@typescript-eslint/explicit-function-return-type': 'off',
   '@typescript-eslint/explicit-module-boundary-types': 'off',
-  '@typescript-eslint/member-ordering': [
-    'error',
-    {
-      default: { order: 'as-written' },
-      classes: { order: 'as-written' },
-      interfaces: { memberTypes: ['signature', 'field'], order: 'natural' },
-      typeLiterals: { order: 'natural' },
-    },
-  ],
   '@typescript-eslint/no-array-constructor': 'warn',
   '@typescript-eslint/no-empty-object-type': [
     'error',
@@ -22,12 +13,12 @@ module.exports = {
   '@typescript-eslint/no-unsafe-function-type': 'error',
   '@typescript-eslint/no-unused-expressions': [
     'error',
-    { allowShortCircuit: true, allowTernary: true, allowTaggedTemplates: true },
+    { allowShortCircuit: true, allowTaggedTemplates: true, allowTernary: true },
   ],
   '@typescript-eslint/no-unused-vars': ['warn', { args: 'none', ignoreRestSiblings: true }],
   '@typescript-eslint/no-use-before-define': [
     'warn',
-    { functions: false, classes: false, variables: false, typedefs: false },
+    { classes: false, functions: false, typedefs: false, variables: false },
   ],
   '@typescript-eslint/no-useless-constructor': 'warn',
   '@typescript-eslint/no-var-requires': 'off',
