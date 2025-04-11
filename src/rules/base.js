@@ -27,6 +27,7 @@ module.exports = {
   ],
   'no-plusplus': 'off',
   'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
+  'no-restricted-exports': ['error', { restrictDefaultExports: { defaultFrom: false } }],
   'padding-line-between-statements': [
     'warn',
     { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
