@@ -37,7 +37,7 @@
     "jest": "29",
     "prettier": "3",
     "typescript": "5",
-    "vitest": "2"
+    "vitest": "2 || 3"
   },
   "peerDependenciesMeta": {
     "jest": {
@@ -83,8 +83,5 @@
     "react": "^19.1.0",
     "typescript": "^5.7.3"
   },
-  "prettier": "@gilbarbara/prettier-config",
-  "overrides": {
-    "eslint-plugin-react-hooks": "^5.0.0"
-  }
+  "prettier": "@gilbarbara/prettier-config"
 }
