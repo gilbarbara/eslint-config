@@ -1,11 +1,16 @@
+const jsxA11yRules = require('./rules/jsx-a11y');
 const reactRules = require('./rules/react');
 
 module.exports = {
-  extends: ['airbnb/rules/react', 'airbnb/rules/react-a11y'],
-  plugins: ['react-hooks'],
+  plugins: ['react', 'jsx-a11y', 'react-hooks'],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
+    },
+  },
+  settings: {
+    react: {
+      version: 'detect',
     },
   },
   overrides: [
@@ -26,8 +31,12 @@ module.exports = {
         'react/default-props-match-prop-types': 'off',
         'react/prop-types': 'off',
         'react/require-default-props': 'off',
+        'react/no-unused-prop-types': 'off',
       },
     },
   ],
-  rules: reactRules,
+  rules: {
+    ...reactRules,
+    ...jsxA11yRules,
+  },
 };

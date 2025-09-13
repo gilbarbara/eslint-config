@@ -20,6 +20,7 @@ module.exports = {
     'warn',
     { classes: false, functions: false, typedefs: false, variables: false },
   ],
+  '@typescript-eslint/triple-slash-reference': 'off',
   '@typescript-eslint/no-useless-constructor': 'warn',
   '@typescript-eslint/no-var-requires': 'off',
   '@typescript-eslint/no-wrapper-object-types': 'error',

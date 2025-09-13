@@ -1,4 +1,4 @@
-const baseRules = require('./rules/base');
+const coreRules = require('./rules/core');
 const importRules = require('./rules/import');
 const stylisticRules = require('./rules/stylistic');
 const typescriptRules = require('./rules/typescript');
@@ -10,7 +10,7 @@ module.exports = {
     es6: true,
     node: true,
   },
-  extends: ['airbnb-base', 'plugin:prettier/recommended'],
+  extends: ['plugin:prettier/recommended'],
   overrides: [
     {
       files: ['**/*.js?(x)'],
@@ -33,10 +33,10 @@ module.exports = {
     ecmaVersion: 2022,
     sourceType: 'module',
   },
-  plugins: ['@babel', 'perfectionist', 'sort-destructure-keys', 'unicorn'],
+  plugins: ['@babel', 'import', 'perfectionist', 'sort-destructure-keys', 'unicorn'],
   reportUnusedDisableDirectives: true,
   rules: {
-    ...baseRules,
+    ...coreRules,
     ...importRules,
     ...stylisticRules,
     ...unicornRules,
