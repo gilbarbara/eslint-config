@@ -1,5 +1,13 @@
 {
   "extends": [
     "./src/index.js"
+  ],
+  "overrides": [
+    {
+      "files": ["test/**/*"],
+      "rules": {
+        "import/no-dynamic-require": "off"
+      }
+    }
   ]
 }
