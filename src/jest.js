@@ -6,7 +6,7 @@ module.exports = {
   },
   settings: {
     jest: {
-      version: 29,
+      version: parseInt(require('jest/package.json')?.version.split('.')[0], 10),
     },
   },
 };

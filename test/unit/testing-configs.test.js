@@ -24,7 +24,7 @@ describe('Testing Framework Configurations', () => {
     it('should have Jest settings', () => {
       expect(config.settings).toBeDefined();
       expect(config.settings.jest).toBeDefined();
-      expect(config.settings.jest.version).toBe(29);
+      expect(config.settings.jest.version).toBe(30);
     });
   });
 
