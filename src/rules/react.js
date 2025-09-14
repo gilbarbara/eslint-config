@@ -165,7 +165,7 @@ module.exports = {
       ignoreCase: true,
     },
   ],
-  'react/jsx-no-leaked-render': 'error',
+  'react/jsx-no-leaked-render': 'off',
   'react/jsx-no-literals': 'off',
   'react/jsx-no-script-url': [
     'error',

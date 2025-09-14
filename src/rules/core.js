@@ -16,6 +16,7 @@ module.exports = {
   'no-await-in-loop': 'off',
   'no-compare-neg-zero': 'error',
   'no-cond-assign': ['error', 'always'],
+  'no-console': 'warn',
   'no-constant-condition': 'warn',
   'no-control-regex': 'error',
   'no-debugger': 'error',
@@ -302,7 +303,7 @@ module.exports = {
     },
   ],
   'arrow-body-style': [
-    'error',
+    'warn',
     'as-needed',
     {
       requireReturnForObjectLiteral: false,
@@ -324,12 +325,7 @@ module.exports = {
     },
   ],
   'no-class-assign': 'error',
-  'no-confusing-arrow': [
-    'error',
-    {
-      allowParens: true,
-    },
-  ],
+  'no-confusing-arrow': 'off',
   'no-const-assign': 'error',
   'no-dupe-class-members': 'error',
   'no-duplicate-imports': 'off',
