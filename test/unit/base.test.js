@@ -40,6 +40,21 @@ describe('Base Configuration Rules', () => {
     it('should configure sort-destructure-keys rule', () => {
       expect(isRuleConfigured(config, 'sort-destructure-keys/sort-destructure-keys')).toBe(true);
     });
+
+    it('should configure promise rules', () => {
+      expect(isRuleConfigured(config, 'promise/catch-or-return')).toBe(true);
+      expect(isRuleConfigured(config, 'promise/no-return-wrap')).toBe(true);
+    });
+
+    it('should configure regexp rules', () => {
+      expect(isRuleConfigured(config, 'regexp/no-dupe-characters-character-class')).toBe(true);
+      expect(isRuleConfigured(config, 'regexp/no-empty-group')).toBe(true);
+    });
+
+    it('should configure unused-imports rules', () => {
+      expect(isRuleConfigured(config, 'unused-imports/no-unused-imports')).toBe(true);
+      expect(isRuleConfigured(config, 'unused-imports/no-unused-vars')).toBe(true);
+    });
   });
 
   describe('TypeScript Configuration', () => {
@@ -104,8 +119,11 @@ describe('Base Configuration Rules', () => {
       expect(hasPlugin(config, '@babel')).toBe(true);
       expect(hasPlugin(config, 'import-x')).toBe(true);
       expect(hasPlugin(config, 'perfectionist')).toBe(true);
+      expect(hasPlugin(config, 'promise')).toBe(true);
+      expect(hasPlugin(config, 'regexp')).toBe(true);
       expect(hasPlugin(config, 'sort-destructure-keys')).toBe(true);
       expect(hasPlugin(config, 'unicorn')).toBe(true);
+      expect(hasPlugin(config, 'unused-imports')).toBe(true);
     });
   });
 });

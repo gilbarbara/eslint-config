@@ -14,7 +14,9 @@ describe('React Configuration Rules', () => {
   describe('React Plugin Rules', () => {
     it('should include React plugins', () => {
       expect(hasPlugin(config, 'react')).toBe(true);
+      expect(hasPlugin(config, 'react-compiler')).toBe(true);
       expect(hasPlugin(config, 'react-hooks')).toBe(true);
+      expect(hasPlugin(config, 'react-refresh')).toBe(true);
       expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
     });
 
@@ -33,6 +35,14 @@ describe('React Configuration Rules', () => {
       expect(isRuleConfigured(config, 'jsx-a11y/alt-text')).toBe(true);
       expect(isRuleConfigured(config, 'jsx-a11y/click-events-have-key-events')).toBe(true);
       expect(isRuleConfigured(config, 'jsx-a11y/no-static-element-interactions')).toBe(true);
+    });
+
+    it('should configure React Compiler rules', () => {
+      expect(isRuleConfigured(config, 'react-compiler/react-compiler')).toBe(true);
+    });
+
+    it('should configure React Refresh rules', () => {
+      expect(isRuleConfigured(config, 'react-refresh/only-export-components')).toBe(true);
     });
   });
 

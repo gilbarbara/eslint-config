@@ -1,6 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// Test react-refresh: non-component export mixed with component
+export const helperFunction = () => 'helper';
+
 // Test React component with TypeScript
 interface Props {
   title: string;

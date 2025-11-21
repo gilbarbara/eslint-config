@@ -45,6 +45,30 @@ describe('ESLint Integration Tests', () => {
 
       expect(destructureViolations.length).toBeGreaterThan(0);
     });
+
+    it('should detect unused imports', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-js.js'));
+      const unusedImportViolations = getViolationsForRule(
+        result,
+        'unused-imports/no-unused-imports',
+      );
+
+      expect(unusedImportViolations.length).toBeGreaterThan(0);
+    });
+
+    it('should detect promise issues', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-js.js'));
+      const promiseViolations = getViolationsForRule(result, 'promise/catch-or-return');
+
+      expect(promiseViolations.length).toBeGreaterThan(0);
+    });
+
+    it('should detect regexp issues', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-js.js'));
+      const regexpViolations = getViolationsForRule(result, 'regexp/no-useless-character-class');
+
+      expect(regexpViolations.length).toBeGreaterThan(0);
+    });
   });
 
   describe('TypeScript Configuration Integration', () => {
@@ -108,6 +132,16 @@ describe('ESLint Integration Tests', () => {
 
       expect(propTypesViolations.length).toBeGreaterThan(0);
       expect(propTypesViolations[0].severity).toBe(1);
+    });
+
+    it('should detect React Refresh export issues', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
+      const refreshViolations = getViolationsForRule(
+        result,
+        'react-refresh/only-export-components',
+      );
+
+      expect(refreshViolations.length).toBeGreaterThan(0);
     });
   });
 
