@@ -95,7 +95,9 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest watch",
-    "validate": "npm run lint && npm run test:coverage"
+    "validate": "npm run lint && npm run test:coverage",
+    "prepare": "husky",
+    "prepublishOnly": "npm run validate"
   },
   "prettier": "@gilbarbara/prettier-config"
 }
