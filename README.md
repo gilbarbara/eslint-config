@@ -18,7 +18,7 @@ Includes rules for React, TypeScript, accessibility (jsx-a11y), import/export, c
 Install the package (ESLint is bundled):
 
 ```sh
-npm install -D @gilbarbara/eslint-config prettier
+npm install -D eslint prettier @gilbarbara/eslint-config
 ```
 
 Create an `eslint.config.js` file:
