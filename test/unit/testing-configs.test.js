@@ -84,6 +84,30 @@ describe('Testing Framework Configurations', () => {
     });
   });
 
+  describe('Node.js Configuration', () => {
+    let config;
+
+    beforeEach(async () => {
+      const module = await import(getConfigPath('node'));
+
+      config = module.default;
+    });
+
+    it('should be a flat config array', () => {
+      expect(Array.isArray(config)).toBe(true);
+    });
+
+    it('should include Node.js plugin', () => {
+      expect(hasPlugin(config, 'n')).toBe(true);
+    });
+
+    it('should configure Node.js-specific rules', () => {
+      expect(getRuleValue(config, 'n/no-deprecated-api')).toBe('error');
+      expect(getRuleValue(config, 'n/prefer-promises/fs')).toBe('warn');
+      expect(getRuleValue(config, 'n/no-path-concat')).toBe('error');
+    });
+  });
+
   describe('Type Checking Configuration', () => {
     let config;
 

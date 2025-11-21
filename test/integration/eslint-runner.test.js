@@ -165,6 +165,44 @@ describe('ESLint Integration Tests', () => {
     });
   });
 
+  describe('Node.js Configuration Integration', () => {
+    let eslint;
+
+    beforeEach(async () => {
+      const baseModule = await import(getConfigPath('base'));
+      const nodeModule = await import(getConfigPath('node'));
+
+      const combinedConfig = [...baseModule.default, ...nodeModule.default];
+
+      eslint = new ESLint({
+        overrideConfigFile: true,
+        overrideConfig: combinedConfig,
+        ignore: false,
+      });
+    });
+
+    it('should detect deprecated Node.js APIs', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-node.js'));
+      const deprecatedViolations = getViolationsForRule(result, 'n/no-deprecated-api');
+
+      expect(deprecatedViolations.length).toBeGreaterThan(0);
+    });
+
+    it('should detect path concatenation issues', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-node.js'));
+      const pathViolations = getViolationsForRule(result, 'n/no-path-concat');
+
+      expect(pathViolations.length).toBeGreaterThan(0);
+    });
+
+    it('should suggest node: protocol', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-node.js'));
+      const protocolViolations = getViolationsForRule(result, 'n/prefer-node-protocol');
+
+      expect(protocolViolations.length).toBeGreaterThan(0);
+    });
+  });
+
   describe('Testing Configuration Integration', () => {
     it('should detect focused tests in Vitest files', async () => {
       const baseModule = await import(getConfigPath('base'));
