@@ -1,21 +1,32 @@
-module.exports = {
-  plugins: ['@vitest'],
-  extends: ['plugin:@vitest/legacy-recommended'],
-  rules: {
-    '@vitest/consistent-test-it': 'warn',
-    '@vitest/no-alias-methods': 'warn',
-    '@vitest/no-conditional-expect': 'warn',
-    '@vitest/no-done-callback': 'error',
-    '@vitest/no-focused-tests': 'error',
-    '@vitest/no-interpolation-in-snapshots': 'warn',
-    '@vitest/no-mocks-import': 'warn',
-    '@vitest/no-standalone-expect': 'warn',
-    '@vitest/no-test-prefixes': 'warn',
-    '@vitest/no-test-return-statement': 'warn',
-    '@vitest/prefer-hooks-in-order': 'warn',
-    '@vitest/prefer-spy-on': 'warn',
-    '@vitest/prefer-to-contain': 'warn',
-    '@vitest/prefer-to-have-length': 'warn',
-    '@vitest/prefer-expect-resolves': 'warn',
+import vitest from '@vitest/eslint-plugin';
+
+export default [
+  {
+    files: [
+      '**/*.test.{js,jsx,ts,tsx}',
+      '**/*.spec.{js,jsx,ts,tsx}',
+      '**/test/**/*.{js,jsx,ts,tsx}',
+    ],
+    plugins: {
+      vitest,
+    },
+    rules: {
+      ...vitest.configs.recommended.rules,
+      'vitest/consistent-test-it': 'warn',
+      'vitest/no-alias-methods': 'warn',
+      'vitest/no-conditional-expect': 'warn',
+      'vitest/no-done-callback': 'error',
+      'vitest/no-focused-tests': 'error',
+      'vitest/no-interpolation-in-snapshots': 'warn',
+      'vitest/no-mocks-import': 'warn',
+      'vitest/no-standalone-expect': 'warn',
+      'vitest/no-test-prefixes': 'warn',
+      'vitest/no-test-return-statement': 'warn',
+      'vitest/prefer-hooks-in-order': 'warn',
+      'vitest/prefer-spy-on': 'warn',
+      'vitest/prefer-to-contain': 'warn',
+      'vitest/prefer-to-have-length': 'warn',
+      'vitest/prefer-expect-resolves': 'warn',
+    },
   },
-};
+];

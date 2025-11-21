@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'react/boolean-prop-naming': 'off',
   'react/button-has-type': [
     'error',

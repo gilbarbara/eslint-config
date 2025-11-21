@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   '@typescript-eslint/ban-ts-comment': 'off',
   '@typescript-eslint/consistent-type-assertions': 'warn',
   '@typescript-eslint/explicit-function-return-type': 'off',
@@ -33,5 +33,4 @@ module.exports = {
   'no-unused-vars': 'off',
   'no-use-before-define': 'off',
   'no-useless-constructor': 'off',
-  'valid-jsdoc': 'off',
 };

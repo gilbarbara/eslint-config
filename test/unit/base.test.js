@@ -1,22 +1,30 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfigPath, isRuleConfigured } from '../utils/eslint-utils';
+import {
+  getConfigForFiles,
+  getConfigPath,
+  getRuleValue,
+  hasPlugin,
+  isRuleConfigured,
+} from '../utils/helpers.js';
 
 describe('Base Configuration Rules', () => {
   let config;
 
-  beforeEach(() => {
-    config = require(getConfigPath('base'));
+  beforeEach(async () => {
+    const module = await import(getConfigPath('base'));
+
+    config = module.default;
   });
 
   describe('Core ESLint Rules', () => {
     it('should configure alert rules appropriately', () => {
       expect(isRuleConfigured(config, 'no-alert')).toBe(true);
-      expect(config.rules['no-alert']).toBe('warn');
+      expect(getRuleValue(config, 'no-alert')).toBe('warn');
     });
 
     it('should configure import ordering rules', () => {
-      expect(isRuleConfigured(config, 'import/order')).toBe(true);
+      expect(isRuleConfigured(config, 'import-x/order')).toBe(true);
     });
 
     it('should configure unicorn rules', () => {
@@ -34,24 +42,28 @@ describe('Base Configuration Rules', () => {
     });
   });
 
-  describe('TypeScript Override Rules', () => {
-    it('should have TypeScript-specific overrides', () => {
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
-      );
+  describe('TypeScript Configuration', () => {
+    it('should have TypeScript-specific configuration', () => {
+      const tsConfig = getConfigForFiles(config, '.ts');
 
-      expect(tsOverride).toBeDefined();
-      expect(tsOverride.rules).toBeDefined();
+      expect(tsConfig).toBeDefined();
     });
 
     it('should configure TypeScript-specific rules', () => {
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
+      // Find the TS config with our custom rules (the last one with our rule overrides)
+      const tsConfigs = config.filter(
+        c =>
+          c.files?.some(f => f.includes('.ts')) &&
+          c.rules?.['@typescript-eslint/no-explicit-any'] !== undefined,
       );
 
-      expect(tsOverride.rules['@typescript-eslint/no-explicit-any']).toBe('off');
-      expect(tsOverride.rules['@typescript-eslint/no-unused-vars']).toBeDefined();
-      expect(tsOverride.rules['@typescript-eslint/no-unused-vars']).toEqual([
+      // Get the last one which should have our overrides
+      const tsConfigWithRules = tsConfigs[tsConfigs.length - 1];
+
+      expect(tsConfigWithRules).toBeDefined();
+      expect(tsConfigWithRules.rules['@typescript-eslint/no-explicit-any']).toBe('off');
+      expect(tsConfigWithRules.rules['@typescript-eslint/no-unused-vars']).toBeDefined();
+      expect(tsConfigWithRules.rules['@typescript-eslint/no-unused-vars']).toEqual([
         'warn',
         { args: 'none', ignoreRestSiblings: true },
       ]);
@@ -60,33 +72,40 @@ describe('Base Configuration Rules', () => {
 
   describe('Parser Configuration', () => {
     it('should use correct parsers for different file types', () => {
-      const jsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.js?(x)'),
-      );
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
-      );
+      const jsConfig = getConfigForFiles(config, '.js');
+      const tsConfig = getConfigForFiles(config, '.ts');
 
-      expect(jsOverride.parser).toBe('@babel/eslint-parser');
-      expect(tsOverride.parser).toBe('@typescript-eslint/parser');
+      expect(jsConfig.languageOptions.parser).toBeDefined();
+      expect(tsConfig.languageOptions.parser).toBeDefined();
     });
   });
 
-  describe('Environment Configuration', () => {
-    it('should set appropriate environments', () => {
-      expect(config.env).toBeDefined();
-      expect(config.env.commonjs).toBe(true);
-      expect(config.env.es6).toBe(true);
-      expect(config.env.node).toBe(true);
+  describe('Globals Configuration', () => {
+    it('should set appropriate globals', () => {
+      const mainConfig = config[0];
+
+      expect(mainConfig.languageOptions).toBeDefined();
+      expect(mainConfig.languageOptions.globals).toBeDefined();
     });
   });
 
   describe('Import Settings', () => {
     it('should configure import resolvers', () => {
-      expect(config.settings).toBeDefined();
-      expect(config.settings['import/resolver']).toBeDefined();
-      expect(config.settings['import/resolver'].node).toBeDefined();
-      expect(config.settings['import/resolver'].typescript).toBeDefined();
+      const mainConfig = config[0];
+
+      expect(mainConfig.settings).toBeDefined();
+      expect(mainConfig.settings['import-x/resolver']).toBeDefined();
+      expect(mainConfig.settings['import-x/resolver'].node).toBeDefined();
+    });
+  });
+
+  describe('Plugins', () => {
+    it('should have core plugins configured', () => {
+      expect(hasPlugin(config, '@babel')).toBe(true);
+      expect(hasPlugin(config, 'import-x')).toBe(true);
+      expect(hasPlugin(config, 'perfectionist')).toBe(true);
+      expect(hasPlugin(config, 'sort-destructure-keys')).toBe(true);
+      expect(hasPlugin(config, 'unicorn')).toBe(true);
     });
   });
 });

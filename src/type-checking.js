@@ -1,11 +1,16 @@
-module.exports = {
-  overrides: [
-    {
-      files: ['**/*.ts?(x)'],
-      extends: ['plugin:@typescript-eslint/recommended-requiring-type-checking'],
+import tseslint from 'typescript-eslint';
+
+export default [
+  ...tseslint.configs.recommendedTypeChecked.map(config => ({
+    ...config,
+    files: ['**/*.ts', '**/*.tsx'],
+  })),
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    languageOptions: {
       parserOptions: {
-        project: './tsconfig.json',
+        projectService: true,
       },
     },
-  ],
-};
+  },
+];
