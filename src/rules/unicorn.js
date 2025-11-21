@@ -9,7 +9,6 @@ export default {
   'unicorn/no-empty-file': 'error',
   'unicorn/no-for-loop': 'warn',
   'unicorn/no-invalid-remove-event-listener': 'error',
-  'unicorn/no-unsafe-regex': 'warn',
   'unicorn/no-useless-fallback-in-spread': 'error',
   'unicorn/no-useless-length-check': 'error',
   'unicorn/no-useless-spread': 'error',
