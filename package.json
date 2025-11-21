@@ -1,6 +1,6 @@
 {
   "name": "@gilbarbara/eslint-config",
-  "version": "1.0.0",
+  "version": "0.9.1",
   "description": "Opinionated ESLint configuration for modern projects",
   "author": "Gil Barbara <gilbarbara@gmail.com>",
   "repository": {
@@ -95,9 +95,9 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest watch",
-    "validate": "npm run lint && npm run test:coverage",
+    "validate": "pnpm run lint && pnpm run test:coverage",
     "prepare": "husky",
-    "prepublishOnly": "npm run validate"
+    "prepublishOnly": "pnpm run validate"
   },
   "prettier": "@gilbarbara/prettier-config"
 }
