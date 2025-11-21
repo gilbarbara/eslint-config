@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'array-callback-return': [
     'error',
     {
@@ -168,7 +168,6 @@ module.exports = {
   ],
   'no-proto': 'error',
   'no-return-assign': ['error', 'always'],
-  'no-return-await': 'error',
   'no-script-url': 'error',
   'no-self-compare': 'error',
   'no-sequences': 'error',
@@ -329,7 +328,7 @@ module.exports = {
   'no-const-assign': 'error',
   'no-dupe-class-members': 'error',
   'no-duplicate-imports': 'off',
-  'no-new-symbol': 'error',
+  'no-new-native-nonconstructor': 'error',
   'no-restricted-exports': [
     'error',
     {

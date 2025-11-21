@@ -1,85 +1,97 @@
 import { describe, expect, it } from 'vitest';
 
-import { getConfigPath } from '../utils/eslint-utils';
+import { getConfigForFiles, getConfigPath, hasPlugin } from '../utils/helpers.js';
 
 describe('Configuration Exports', () => {
   const configs = ['index', 'base', 'react', 'jest', 'vitest', 'testing-library', 'type-checking'];
 
   configs.forEach(configName => {
     describe(`${configName} configuration`, () => {
-      it('should be a valid ESLint configuration', () => {
+      it('should be a valid ESLint flat configuration', async () => {
         const configPath = getConfigPath(configName);
-        const config = require(configPath);
+        const module = await import(configPath);
+        const config = module.default;
 
         expect(config).toBeDefined();
-        expect(typeof config).toBe('object');
+        expect(Array.isArray(config)).toBe(true);
       });
 
-      it('should have required properties', () => {
+      it('should have configuration objects', async () => {
         const configPath = getConfigPath(configName);
-        const config = require(configPath);
+        const module = await import(configPath);
+        const config = module.default;
 
-        // All configs should have at least rules, extends, or overrides
-        const hasRules = config.rules && typeof config.rules === 'object';
-        const hasExtends =
-          config.extends && (Array.isArray(config.extends) || typeof config.extends === 'string');
-        const hasOverrides = config.overrides && Array.isArray(config.overrides);
-
-        expect(hasRules || hasExtends || hasOverrides).toBe(true);
+        expect(config.length).toBeGreaterThan(0);
+        config.forEach(configItem => {
+          expect(typeof configItem).toBe('object');
+        });
       });
     });
   });
 
   describe('Main index configuration', () => {
-    it('should extend base and react configurations', () => {
-      const config = require(getConfigPath('index'));
+    it('should combine base and react configurations', async () => {
+      const module = await import(getConfigPath('index'));
+      const config = module.default;
 
-      expect(config.extends).toBeDefined();
-      expect(Array.isArray(config.extends)).toBe(true);
-      expect(config.extends).toHaveLength(2);
+      expect(Array.isArray(config)).toBe(true);
+      expect(config.length).toBeGreaterThan(0);
+    });
+
+    it('should export named configurations', async () => {
+      const module = await import(getConfigPath('index'));
+
+      expect(module.base).toBeDefined();
+      expect(module.react).toBeDefined();
+      expect(module.jest).toBeDefined();
+      expect(module.vitest).toBeDefined();
+      expect(module.testingLibrary).toBeDefined();
+      expect(module.typeChecking).toBeDefined();
     });
   });
 
   describe('Base configuration', () => {
-    it('should have core plugin configurations', () => {
-      const config = require(getConfigPath('base'));
+    it('should have core plugin configurations', async () => {
+      const module = await import(getConfigPath('base'));
+      const config = module.default;
 
-      expect(config.plugins).toContain('@babel');
-      expect(config.plugins).toContain('import');
-      expect(config.plugins).toContain('perfectionist');
-      expect(config.plugins).toContain('sort-destructure-keys');
-      expect(config.plugins).toContain('unicorn');
+      expect(hasPlugin(config, '@babel')).toBe(true);
+      expect(hasPlugin(config, 'import-x')).toBe(true);
+      expect(hasPlugin(config, 'perfectionist')).toBe(true);
+      expect(hasPlugin(config, 'sort-destructure-keys')).toBe(true);
+      expect(hasPlugin(config, 'unicorn')).toBe(true);
     });
 
-    it('should have TypeScript overrides', () => {
-      const config = require(getConfigPath('base'));
+    it('should have TypeScript configuration', async () => {
+      const module = await import(getConfigPath('base'));
+      const config = module.default;
 
-      expect(config.overrides).toBeDefined();
-      expect(Array.isArray(config.overrides)).toBe(true);
+      const tsConfig = getConfigForFiles(config, '.ts');
 
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
-      );
-
-      expect(tsOverride).toBeDefined();
-      expect(tsOverride.parser).toBe('@typescript-eslint/parser');
+      expect(tsConfig).toBeDefined();
+      expect(tsConfig.languageOptions.parser).toBeDefined();
     });
   });
 
   describe('React configuration', () => {
-    it('should include React-specific plugins', () => {
-      const config = require(getConfigPath('react'));
+    it('should include React-specific plugins', async () => {
+      const module = await import(getConfigPath('react'));
+      const config = module.default;
 
-      expect(config.plugins).toContain('react');
-      expect(config.plugins).toContain('react-hooks');
-      expect(config.plugins).toContain('jsx-a11y');
+      expect(hasPlugin(config, 'react')).toBe(true);
+      expect(hasPlugin(config, 'react-hooks')).toBe(true);
+      expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
     });
 
-    it('should have different settings for JS and TS files', () => {
-      const config = require(getConfigPath('react'));
+    it('should have different settings for JS and TS files', async () => {
+      const module = await import(getConfigPath('react'));
+      const config = module.default;
 
-      expect(config.overrides).toBeDefined();
-      expect(Array.isArray(config.overrides)).toBe(true);
+      const jsConfig = getConfigForFiles(config, '.js');
+      const tsConfig = getConfigForFiles(config, '.ts');
+
+      expect(jsConfig).toBeDefined();
+      expect(tsConfig).toBeDefined();
     });
   });
 });

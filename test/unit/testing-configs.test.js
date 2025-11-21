@@ -1,105 +1,125 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfigPath } from '../utils/eslint-utils';
+import { getConfigForFiles, getConfigPath, getRuleValue, hasPlugin } from '../utils/helpers.js';
 
 describe('Testing Framework Configurations', () => {
   describe('Jest Configuration', () => {
     let config;
 
-    beforeEach(() => {
-      config = require(getConfigPath('jest'));
+    beforeEach(async () => {
+      const module = await import(getConfigPath('jest'));
+
+      config = module.default;
     });
 
-    it('should extend Jest configurations', () => {
-      expect(config.extends).toBeDefined();
-      expect(config.extends).toContain('plugin:jest/recommended');
-      expect(config.extends).toContain('plugin:jest-dom/recommended');
+    it('should be a flat config array', () => {
+      expect(Array.isArray(config)).toBe(true);
     });
 
-    it('should set Jest environment', () => {
-      expect(config.env).toBeDefined();
-      expect(config.env.jest).toBe(true);
+    it('should include Jest plugins', () => {
+      expect(hasPlugin(config, 'jest')).toBe(true);
+      expect(hasPlugin(config, 'jest-dom')).toBe(true);
     });
 
-    it('should have Jest settings', () => {
-      expect(config.settings).toBeDefined();
-      expect(config.settings.jest).toBeDefined();
-      expect(config.settings.jest.version).toBe(30);
+    it('should have Jest globals', () => {
+      const mainConfig = config[0];
+
+      expect(mainConfig.languageOptions).toBeDefined();
+      expect(mainConfig.languageOptions.globals).toBeDefined();
+    });
+
+    it('should target test files', () => {
+      const mainConfig = config[0];
+
+      expect(mainConfig.files).toBeDefined();
+      expect(mainConfig.files.some(pattern => pattern.includes('.test.'))).toBe(true);
     });
   });
 
   describe('Vitest Configuration', () => {
     let config;
 
-    beforeEach(() => {
-      config = require(getConfigPath('vitest'));
+    beforeEach(async () => {
+      const module = await import(getConfigPath('vitest'));
+
+      config = module.default;
     });
 
     it('should include Vitest plugin', () => {
-      expect(config.plugins).toContain('@vitest');
+      expect(hasPlugin(config, 'vitest')).toBe(true);
     });
 
     it('should configure Vitest-specific rules', () => {
-      expect(config.rules['@vitest/no-focused-tests']).toBe('error');
-      expect(config.rules['@vitest/consistent-test-it']).toBe('warn');
-      expect(config.rules['@vitest/no-done-callback']).toBe('error');
+      expect(getRuleValue(config, 'vitest/no-focused-tests')).toBe('error');
+      expect(getRuleValue(config, 'vitest/consistent-test-it')).toBe('warn');
+      expect(getRuleValue(config, 'vitest/no-done-callback')).toBe('error');
     });
 
-    it('should extend legacy recommended config', () => {
-      expect(config.extends).toBeDefined();
-      expect(config.extends).toContain('plugin:@vitest/legacy-recommended');
+    it('should target test files', () => {
+      const mainConfig = config[0];
+
+      expect(mainConfig.files).toBeDefined();
+      expect(mainConfig.files.some(pattern => pattern.includes('.test.'))).toBe(true);
     });
   });
 
   describe('Testing Library Configuration', () => {
     let config;
 
-    beforeEach(() => {
-      config = require(getConfigPath('testing-library'));
+    beforeEach(async () => {
+      const module = await import(getConfigPath('testing-library'));
+
+      config = module.default;
     });
 
-    it('should extend Testing Library React configuration', () => {
-      expect(config.extends).toBeDefined();
-      expect(config.extends).toContain('plugin:testing-library/react');
+    it('should be a flat config array', () => {
+      expect(Array.isArray(config)).toBe(true);
+    });
+
+    it('should target test files', () => {
+      const mainConfig = config[0];
+
+      expect(mainConfig.files).toBeDefined();
+      expect(mainConfig.files.some(pattern => pattern.includes('.test.'))).toBe(true);
     });
   });
 
   describe('Type Checking Configuration', () => {
     let config;
 
-    beforeEach(() => {
-      config = require(getConfigPath('type-checking'));
+    beforeEach(async () => {
+      const module = await import(getConfigPath('type-checking'));
+
+      config = module.default;
     });
 
-    it('should have overrides with TypeScript project configuration', () => {
-      expect(config.overrides).toBeDefined();
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
-      );
-
-      expect(tsOverride).toBeDefined();
-      expect(tsOverride.parserOptions).toBeDefined();
-      expect(tsOverride.parserOptions.project).toBeDefined();
+    it('should be a flat config array', () => {
+      expect(Array.isArray(config)).toBe(true);
     });
 
-    it('should extend recommended type checking configuration', () => {
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
+    it('should have TypeScript configuration', () => {
+      const tsConfig = getConfigForFiles(config, '.ts');
+
+      expect(tsConfig).toBeDefined();
+    });
+
+    it('should configure project service for type checking', () => {
+      // Find the config with projectService (may not be in the first TS config)
+      const configWithProjectService = config.find(
+        c =>
+          c.files?.some(f => f.includes('.ts')) &&
+          c.languageOptions?.parserOptions?.projectService !== undefined,
       );
 
-      expect(tsOverride.extends).toBeDefined();
-      expect(tsOverride.extends).toContain(
-        'plugin:@typescript-eslint/recommended-requiring-type-checking',
-      );
+      expect(configWithProjectService).toBeDefined();
+      expect(configWithProjectService.languageOptions.parserOptions.projectService).toBe(true);
     });
 
     it('should only apply to TypeScript files', () => {
-      expect(config.overrides).toBeDefined();
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.includes('**/*.ts?(x)'),
-      );
+      const tsConfig = getConfigForFiles(config, '.ts');
 
-      expect(tsOverride).toBeDefined();
+      expect(tsConfig).toBeDefined();
+      expect(tsConfig.files.some(pattern => pattern.includes('.ts'))).toBe(true);
     });
   });
 });

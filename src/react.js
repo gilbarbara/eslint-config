@@ -1,42 +1,58 @@
-const jsxA11yRules = require('./rules/jsx-a11y');
-const reactRules = require('./rules/react');
+import jsxA11y from 'eslint-plugin-jsx-a11y';
+import react from 'eslint-plugin-react';
+import reactHooks from 'eslint-plugin-react-hooks';
 
-module.exports = {
-  plugins: ['react', 'jsx-a11y', 'react-hooks'],
-  parserOptions: {
-    ecmaFeatures: {
-      jsx: true,
+import jsxA11yRules from './rules/jsx-a11y.js';
+import reactRules from './rules/react.js';
+
+export default [
+  {
+    plugins: {
+      react,
+      'react-hooks': reactHooks,
+      'jsx-a11y': jsxA11y,
+    },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+    languageOptions: {
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      ...reactRules,
+      ...jsxA11yRules,
     },
   },
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
-  overrides: [
-    {
-      files: ['**/*.js?(x)'],
+
+  // JS-specific React rules
+  {
+    files: ['**/*.js', '**/*.jsx'],
+    languageOptions: {
       parserOptions: {
         babelOptions: {
           presets: ['@babel/preset-react'],
         },
       },
-      rules: {
-        'react/prop-types': 'warn',
-      },
     },
-    {
-      files: ['**/*.ts?(x)'],
-      rules: {
-        'react/default-props-match-prop-types': 'off',
-        'react/prop-types': 'off',
-        'react/require-default-props': 'off',
-        'react/no-unused-prop-types': 'off',
-      },
+    rules: {
+      'react/prop-types': 'warn',
     },
-  ],
-  rules: {
-    ...reactRules,
-    ...jsxA11yRules,
   },
-};
+
+  // TS-specific React rules
+  {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      'react/default-props-match-prop-types': 'off',
+      'react/prop-types': 'off',
+      'react/require-default-props': 'off',
+      'react/no-unused-prop-types': 'off',
+    },
+  },
+];

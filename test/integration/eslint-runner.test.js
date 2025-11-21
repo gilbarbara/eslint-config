@@ -1,26 +1,27 @@
+import { ESLint } from 'eslint';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import {
-  createESLintInstance,
+  createESLintWithConfig,
   getAllViolations,
   getConfigPath,
   getFixturePath,
   getViolationsForRule,
   lintFile,
-} from '../utils/eslint-utils';
+} from '../utils/helpers.js';
 
 describe('ESLint Integration Tests', () => {
   describe('Base Configuration Integration', () => {
     let eslint;
 
     beforeAll(() => {
-      vi.spyOn(console, 'log').mockImplementation(() => {}); // Suppress ESLint error logs
-      vi.spyOn(console, 'warn').mockImplementation(() => {}); // Suppress ESLint error logs
-      vi.spyOn(console, 'error').mockImplementation(() => {}); // Suppress ESLint error logs
+      vi.spyOn(console, 'log').mockImplementation(() => {});
+      vi.spyOn(console, 'warn').mockImplementation(() => {});
+      vi.spyOn(console, 'error').mockImplementation(() => {});
     });
 
-    beforeEach(() => {
-      eslint = createESLintInstance(getConfigPath('base'));
+    beforeEach(async () => {
+      eslint = await createESLintWithConfig(getConfigPath('base'));
     });
 
     afterAll(() => {
@@ -32,7 +33,7 @@ describe('ESLint Integration Tests', () => {
       const importViolations = getViolationsForRule(result, 'perfectionist/sort-imports');
 
       expect(importViolations.length).toBeGreaterThan(0);
-      expect(importViolations[0].severity).toBe(2); // error
+      expect(importViolations[0].severity).toBe(2);
     });
 
     it('should detect destructuring key sorting issues', async () => {
@@ -49,8 +50,8 @@ describe('ESLint Integration Tests', () => {
   describe('TypeScript Configuration Integration', () => {
     let eslint;
 
-    beforeEach(() => {
-      eslint = createESLintInstance(getConfigPath('base'));
+    beforeEach(async () => {
+      eslint = await createESLintWithConfig(getConfigPath('base'));
     });
 
     it('should detect unused variables in TypeScript', async () => {
@@ -58,13 +59,12 @@ describe('ESLint Integration Tests', () => {
       const unusedVarViolations = getViolationsForRule(result, '@typescript-eslint/no-unused-vars');
 
       expect(unusedVarViolations.length).toBeGreaterThan(0);
-      expect(unusedVarViolations[0].severity).toBe(1); // warning
+      expect(unusedVarViolations[0].severity).toBe(1);
     });
 
     it('should handle TypeScript syntax correctly', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-ts.ts'));
 
-      // Should not have parsing errors
       expect(result.fatalErrorCount).toBe(0);
       expect(result.messages.some(message => message.fatal)).toBe(false);
     });
@@ -73,9 +73,8 @@ describe('ESLint Integration Tests', () => {
   describe('React Configuration Integration', () => {
     let eslint;
 
-    beforeEach(() => {
-      // Use the main index config which properly combines base + react
-      eslint = createESLintInstance(getConfigPath('index'));
+    beforeEach(async () => {
+      eslint = await createESLintWithConfig(getConfigPath('index'));
     });
 
     it('should detect JSX accessibility issues', async () => {
@@ -85,7 +84,6 @@ describe('ESLint Integration Tests', () => {
       );
 
       expect(a11yViolations.length).toBeGreaterThan(0);
-      // Should detect alt-text and click handler issues
       expect(a11yViolations.some(v => v.ruleId === 'jsx-a11y/alt-text')).toBe(true);
     });
 
@@ -94,14 +92,13 @@ describe('ESLint Integration Tests', () => {
       const hookViolations = getViolationsForRule(result, 'react-hooks/exhaustive-deps');
 
       expect(hookViolations.length).toBeGreaterThan(0);
-      expect(hookViolations[0].severity).toBe(1); // warning
+      expect(hookViolations[0].severity).toBe(1);
     });
 
     it('should handle prop-types correctly for TypeScript', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
       const propTypesViolations = getViolationsForRule(result, 'react/prop-types');
 
-      // Should not warn about missing prop-types in TypeScript files
       expect(propTypesViolations).toHaveLength(0);
     });
 
@@ -109,24 +106,22 @@ describe('ESLint Integration Tests', () => {
       const result = await lintFile(eslint, getFixturePath('sample-react-js.jsx'));
       const propTypesViolations = getViolationsForRule(result, 'react/prop-types');
 
-      // Should warn about missing prop-types in JS files
       expect(propTypesViolations.length).toBeGreaterThan(0);
-      expect(propTypesViolations[0].severity).toBe(1); // warning
+      expect(propTypesViolations[0].severity).toBe(1);
     });
   });
 
   describe('Combined Configuration Integration', () => {
     let eslint;
 
-    beforeEach(() => {
-      eslint = createESLintInstance(getConfigPath('index'));
+    beforeEach(async () => {
+      eslint = await createESLintWithConfig(getConfigPath('index'));
     });
 
     it('should apply both base and React rules', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
       const allViolations = getAllViolations(result);
 
-      // Should have violations from both base config (console, etc.) and React config
       const hasBaseViolations = allViolations.some(v =>
         ['no-console', 'perfectionist/sort-imports'].includes(v.ruleId),
       );
@@ -138,48 +133,40 @@ describe('ESLint Integration Tests', () => {
 
   describe('Testing Configuration Integration', () => {
     it('should detect focused tests in Vitest files', async () => {
-      // Create a combined config with base + vitest
-      const baseConfig = require(getConfigPath('base'));
-      const vitestConfig = require(getConfigPath('vitest'));
-      const combinedConfig = {
-        ...baseConfig,
-        ...vitestConfig,
-        plugins: [...(baseConfig.plugins || []), ...(vitestConfig.plugins || [])],
-        rules: { ...baseConfig.rules, ...vitestConfig.rules },
-      };
+      const baseModule = await import(getConfigPath('base'));
+      const vitestModule = await import(getConfigPath('vitest'));
 
-      const ESLint = await import('eslint');
+      const combinedConfig = [...baseModule.default, ...vitestModule.default];
 
-      const eslint = new ESLint.ESLint({
-        baseConfig: combinedConfig,
-        useEslintrc: false,
+      const eslint = new ESLint({
+        overrideConfigFile: true,
+        overrideConfig: combinedConfig,
         ignore: false,
       });
 
       const result = await lintFile(eslint, getFixturePath('sample-test.js'));
-      const focusedTestViolations = getViolationsForRule(result, '@vitest/no-focused-tests');
+      const focusedTestViolations = getViolationsForRule(result, 'vitest/no-focused-tests');
 
       expect(focusedTestViolations).toHaveLength(1);
-      expect(focusedTestViolations[0].severity).toBe(2); // error
+      expect(focusedTestViolations[0].severity).toBe(2);
     });
   });
 
   describe('Error Handling', () => {
     it('should handle missing files gracefully', async () => {
-      const eslint = createESLintInstance(getConfigPath('base'));
+      const eslint = await createESLintWithConfig(getConfigPath('base'));
 
       await expect(lintFile(eslint, getFixturePath('non-existent.js'))).rejects.toThrow();
     });
 
     it('should handle syntax errors in files', async () => {
-      // Create a temporary file with syntax error
       const tempFile = getFixturePath('syntax-error.js');
       const fs = await import('node:fs/promises');
 
       try {
         await fs.writeFile(tempFile, 'const invalid syntax = ;');
 
-        const eslint = createESLintInstance(getConfigPath('base'));
+        const eslint = await createESLintWithConfig(getConfigPath('base'));
         const result = await lintFile(eslint, tempFile);
 
         expect(result.errorCount).toBeGreaterThan(0);

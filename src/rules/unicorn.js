@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'unicorn/better-regex': 'warn',
   'unicorn/catch-error-name': 'warn',
   'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],

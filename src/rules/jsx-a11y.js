@@ -1,5 +1,4 @@
-module.exports = {
-  'jsx-a11y/accessible-emoji': 'error',
+export default {
   'jsx-a11y/alt-text': [
     'error',
     {

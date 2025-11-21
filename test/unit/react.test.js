@@ -1,19 +1,21 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfigPath, isRuleConfigured } from '../utils/eslint-utils';
+import { getConfigForFiles, getConfigPath, hasPlugin, isRuleConfigured } from '../utils/helpers.js';
 
 describe('React Configuration Rules', () => {
   let config;
 
-  beforeEach(() => {
-    config = require(getConfigPath('react'));
+  beforeEach(async () => {
+    const module = await import(getConfigPath('react'));
+
+    config = module.default;
   });
 
   describe('React Plugin Rules', () => {
     it('should include React plugins', () => {
-      expect(config.plugins).toContain('react');
-      expect(config.plugins).toContain('react-hooks');
-      expect(config.plugins).toContain('jsx-a11y');
+      expect(hasPlugin(config, 'react')).toBe(true);
+      expect(hasPlugin(config, 'react-hooks')).toBe(true);
+      expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
     });
 
     it('should configure React-specific rules', () => {
@@ -34,23 +36,19 @@ describe('React Configuration Rules', () => {
     });
   });
 
-  describe('File-specific Overrides', () => {
+  describe('File-specific Configuration', () => {
     it('should have different prop-types rules for JS vs TS', () => {
-      const jsOverride = config.overrides.find(
-        override => override.files && override.files.some(file => file.includes('.js')),
-      );
-      const tsOverride = config.overrides.find(
-        override => override.files && override.files.some(file => file.includes('.ts')),
-      );
+      const jsConfig = getConfigForFiles(config, '.js');
+      const tsConfig = getConfigForFiles(config, '.ts');
 
       // JS files should warn about missing prop-types
-      if (jsOverride && jsOverride.rules) {
-        expect(jsOverride.rules['react/prop-types']).toBe('warn');
+      if (jsConfig && jsConfig.rules) {
+        expect(jsConfig.rules['react/prop-types']).toBe('warn');
       }
 
       // TS files should disable prop-types
-      if (tsOverride && tsOverride.rules) {
-        expect(tsOverride.rules['react/prop-types']).toBe('off');
+      if (tsConfig && tsConfig.rules) {
+        expect(tsConfig.rules['react/prop-types']).toBe('off');
       }
     });
   });
@@ -64,9 +62,12 @@ describe('React Configuration Rules', () => {
 
   describe('Parser Options', () => {
     it('should enable JSX in parser options', () => {
-      expect(config.parserOptions).toBeDefined();
-      expect(config.parserOptions.ecmaFeatures).toBeDefined();
-      expect(config.parserOptions.ecmaFeatures.jsx).toBe(true);
+      const mainConfig = config[0];
+
+      expect(mainConfig.languageOptions).toBeDefined();
+      expect(mainConfig.languageOptions.parserOptions).toBeDefined();
+      expect(mainConfig.languageOptions.parserOptions.ecmaFeatures).toBeDefined();
+      expect(mainConfig.languageOptions.parserOptions.ecmaFeatures.jsx).toBe(true);
     });
   });
 });

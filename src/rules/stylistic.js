@@ -7,7 +7,7 @@ const warnWithNaturalOrder = [
 
 const COMPONENTS = ['components', 'containers', 'pages', 'routes'];
 
-module.exports = {
+export default {
   'perfectionist/sort-array-includes': warnWithNaturalOrder,
   'perfectionist/sort-exports': warnWithNaturalOrder,
   'perfectionist/sort-imports': [
