@@ -111,6 +111,7 @@ describe('Base Configuration Rules', () => {
       expect(mainConfig.settings).toBeDefined();
       expect(mainConfig.settings['import-x/resolver']).toBeDefined();
       expect(mainConfig.settings['import-x/resolver'].node).toBeDefined();
+      expect(mainConfig.settings['import-x/resolver'].typescript).toBe(true);
     });
   });
 

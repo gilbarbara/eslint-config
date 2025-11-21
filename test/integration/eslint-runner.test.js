@@ -92,6 +92,13 @@ describe('ESLint Integration Tests', () => {
       expect(result.fatalErrorCount).toBe(0);
       expect(result.messages.some(message => message.fatal)).toBe(false);
     });
+
+    it('should resolve TypeScript type imports', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-ts-import.ts'));
+      const unresolvedViolations = getViolationsForRule(result, 'import-x/no-unresolved');
+
+      expect(unresolvedViolations).toHaveLength(0);
+    });
   });
 
   describe('React Configuration Integration', () => {
