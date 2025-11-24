@@ -18,7 +18,7 @@ export default {
   'no-cond-assign': ['error', 'always'],
   'no-console': 'warn',
   'no-constant-condition': 'warn',
-  'no-control-regex': 'error',
+  'no-control-regex': 'off', // conflicts with regexp/no-super-linear-backtracking fixes
   'no-debugger': 'error',
   'no-dupe-args': 'error',
   'no-dupe-keys': 'error',

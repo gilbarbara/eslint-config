@@ -46,6 +46,7 @@ export default {
         refs: false,
         src: false,
         temp: false,
+        utils: false,
         var: false,
         vars: false,
       },

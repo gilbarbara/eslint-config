@@ -3,7 +3,7 @@ export default {
   'regexp/control-character-escape': 'error',
   'regexp/negation': 'warn',
   'regexp/no-contradiction-with-assertion': 'error',
-  'regexp/no-control-character': 'warn',
+  'regexp/no-control-character': 'off', // conflicts with regexp/no-super-linear-backtracking fixes
   'regexp/no-dupe-characters-character-class': 'error',
   'regexp/no-dupe-disjunctions': 'warn',
   'regexp/no-empty-alternative': 'warn',
