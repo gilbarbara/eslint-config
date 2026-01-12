@@ -13,20 +13,18 @@ export default {
   'perfectionist/sort-imports': [
     'error',
     {
-      customGroups: {
-        value: {
-          components: COMPONENTS.map(c => `^~/${c}/`),
-          legacy: ['^src', '^test'],
-          react: ['^react$', '^react-dom$', '^react.+'],
-          root: ['^~$'],
-          types: ['^~/types'],
-        },
-      },
+      customGroups: [
+        { groupName: 'components', elementNamePattern: COMPONENTS.map(c => `^~/${c}/`) },
+        { groupName: 'legacy', elementNamePattern: ['^src', '^test'] },
+        { groupName: 'react', elementNamePattern: ['^react$', '^react-dom$', '^react-.+'] },
+        { groupName: 'root', elementNamePattern: '^~$' },
+        { groupName: 'types', elementNamePattern: '^~/types' },
+      ],
       groups: [
         'side-effect',
-        ['builtin'],
+        'builtin',
         'react',
-        { newlinesBetween: 'never' },
+        { newlinesBetween: 0 },
         'external',
         'root',
         'internal',
@@ -34,10 +32,9 @@ export default {
         'legacy',
         'types',
         'parent',
-        'index',
         'sibling',
+        'index',
         'style',
-        'object',
         'unknown',
       ],
       internalPattern: [`^~/(?!(${COMPONENTS.join('|')}|types))`],
