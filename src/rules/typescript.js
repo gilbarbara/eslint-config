@@ -26,6 +26,7 @@ export default {
   '@typescript-eslint/no-wrapper-object-types': 'error',
   // TypeScript's `noFallthroughCasesInSwitch` option is more robust (#6906)
   'default-case': 'off',
+  'import-x/named': 'off',
   'no-array-constructor': 'off',
   'no-dupe-class-members': 'off',
   'no-undef': 'off',
