@@ -2,7 +2,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y';
 import react from 'eslint-plugin-react';
 import reactCompiler from 'eslint-plugin-react-compiler';
 import reactHooks from 'eslint-plugin-react-hooks';
-import reactRefresh from 'eslint-plugin-react-refresh';
+import { reactRefresh } from 'eslint-plugin-react-refresh';
 
 import jsxA11yRules from './rules/jsx-a11y.js';
 import reactRules from './rules/react.js';
@@ -13,7 +13,7 @@ export default [
       react,
       'react-compiler': reactCompiler,
       'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
+      'react-refresh': reactRefresh.plugin,
       'jsx-a11y': jsxA11y,
     },
     settings: {
