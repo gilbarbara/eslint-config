@@ -13,47 +13,53 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
-permissions:
-  id-token: write
-  contents: read
-
 jobs:
-  main:
-    name: CI Pipeline
+  validate:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v4
         with:
           version: 10
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: 'pnpm'
-          registry-url: 'https://registry.npmjs.org'
+          cache: pnpm
 
-      - name: Upgrade npm
-        run: npm install -g npm@11
+      - run: pnpm install
 
-      - name: Install dependencies
-        run: pnpm install
+      - run: pnpm validate
 
-      - name: Validate
+      - uses: SonarSource/sonarqube-scan-action@v7.0.0
         if: "!startsWith(github.ref, 'refs/tags/')"
-        run: pnpm run validate
-
-      - name: SonarCloud Scan
-        if: "!startsWith(github.ref, 'refs/tags/')"
-        uses: SonarSource/sonarcloud-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Publish Package
-        if: startsWith(github.ref, 'refs/tags/')
-        run: npm publish --provenance
+  publish:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: npm install -g npm@11
+
+      - run: pnpm install
+
+      - run: npm publish --provenance
