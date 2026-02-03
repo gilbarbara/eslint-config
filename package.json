@@ -98,8 +98,7 @@
     "test:coverage": "vitest run --coverage",
     "test:watch": "vitest watch",
     "validate": "pnpm run lint && pnpm run test:coverage",
-    "prepare": "husky",
-    "prepublishOnly": "pnpm run validate"
+    "prepare": "husky"
   },
   "prettier": "@gilbarbara/prettier-config",
   "pnpm": {
