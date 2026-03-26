@@ -70,9 +70,6 @@ Includes [React](https://www.npmjs.com/package/eslint-plugin-react), [React Comp
 **@gilbarbara/eslint-config/vitest**  
 Includes [Vitest](https://www.npmjs.com/package/@vitest/eslint-plugin) rules.
 
-**@gilbarbara/eslint-config/jest**  
-Includes [Jest](https://www.npmjs.com/package/eslint-plugin-jest) and [Jest DOM](https://www.npmjs.com/package/eslint-plugin-jest-dom) rules.
-
 **@gilbarbara/eslint-config/testing-library**  
 Includes [Testing Library](https://www.npmjs.com/package/eslint-plugin-testing-library) rules.
 

@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { getConfigForFiles, getConfigPath, hasPlugin } from '../utils/helpers.js';
 
 describe('Configuration Exports', () => {
-  const configs = ['index', 'base', 'react', 'jest', 'vitest', 'testing-library', 'type-checking'];
+  const configs = ['index', 'base', 'react', 'vitest', 'testing-library', 'type-checking'];
 
   configs.forEach(configName => {
     describe(`${configName} configuration`, () => {
@@ -43,7 +43,6 @@ describe('Configuration Exports', () => {
 
       expect(module.base).toBeDefined();
       expect(module.react).toBeDefined();
-      expect(module.jest).toBeDefined();
       expect(module.vitest).toBeDefined();
       expect(module.testingLibrary).toBeDefined();
       expect(module.typeChecking).toBeDefined();
