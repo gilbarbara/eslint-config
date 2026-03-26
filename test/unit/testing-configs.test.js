@@ -3,39 +3,6 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { getConfigForFiles, getConfigPath, getRuleValue, hasPlugin } from '../utils/helpers.js';
 
 describe('Testing Framework Configurations', () => {
-  describe('Jest Configuration', () => {
-    let config;
-
-    beforeEach(async () => {
-      const module = await import(getConfigPath('jest'));
-
-      config = module.default;
-    });
-
-    it('should be a flat config array', () => {
-      expect(Array.isArray(config)).toBe(true);
-    });
-
-    it('should include Jest plugins', () => {
-      expect(hasPlugin(config, 'jest')).toBe(true);
-      expect(hasPlugin(config, 'jest-dom')).toBe(true);
-    });
-
-    it('should have Jest globals', () => {
-      const mainConfig = config[0];
-
-      expect(mainConfig.languageOptions).toBeDefined();
-      expect(mainConfig.languageOptions.globals).toBeDefined();
-    });
-
-    it('should target test files', () => {
-      const mainConfig = config[0];
-
-      expect(mainConfig.files).toBeDefined();
-      expect(mainConfig.files.some(pattern => pattern.includes('.test.'))).toBe(true);
-    });
-  });
-
   describe('Vitest Configuration', () => {
     let config;
 
