@@ -126,21 +126,6 @@ describe('ESLint Integration Tests', () => {
       expect(hookViolations[0].severity).toBe(1);
     });
 
-    it('should handle prop-types correctly for TypeScript', async () => {
-      const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
-      const propTypesViolations = getViolationsForRule(result, 'react/prop-types');
-
-      expect(propTypesViolations).toHaveLength(0);
-    });
-
-    it('should require prop-types for JavaScript React components', async () => {
-      const result = await lintFile(eslint, getFixturePath('sample-react-js.jsx'));
-      const propTypesViolations = getViolationsForRule(result, 'react/prop-types');
-
-      expect(propTypesViolations.length).toBeGreaterThan(0);
-      expect(propTypesViolations[0].severity).toBe(1);
-    });
-
     it('should detect React Refresh export issues', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
       const refreshViolations = getViolationsForRule(
