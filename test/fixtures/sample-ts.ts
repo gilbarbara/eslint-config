@@ -23,8 +23,28 @@ function testFunction(): TestInterface {
 // Test class definition
 class TestClass {
   private readonly property: string;
-  
+
   constructor(property: string) {
     this.property = property;
   }
+}
+
+/**
+ * Normalize an alpha value to the 0-1 range.
+ * Values > 1 are treated as percentages and divided by 100.
+ */
+export function normalizeAlpha(value: number): number;
+export function normalizeAlpha(value: number | undefined): number | undefined;
+export function normalizeAlpha(value: number | undefined): number | undefined {
+  if (value === undefined) {
+    return undefined;
+  }
+
+  return value > 1 ? value / 100 : value;
+}
+
+// Test export const -> export function (should require blank line)
+export const alphaDefault = 1;
+export function getAlpha() {
+  return alphaDefault;
 }

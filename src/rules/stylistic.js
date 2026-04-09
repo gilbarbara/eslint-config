@@ -50,7 +50,12 @@ export default {
     {
       blankLine: 'any',
       prev: 'function-overload',
-      next: 'function-overload',
+      next: '*',
+    },
+    {
+      blankLine: 'any',
+      prev: { selector: 'ExportNamedDeclaration:has(TSDeclareFunction)' },
+      next: '*',
     },
   ],
   'perfectionist/sort-array-includes': warnWithNaturalOrder,

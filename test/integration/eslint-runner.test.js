@@ -106,6 +106,18 @@ describe('ESLint Integration Tests', () => {
 
       expect(unresolvedViolations).toHaveLength(0);
     });
+
+    it('should not warn about padding before exported function overload implementation', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-ts.ts'));
+      const paddingViolations = getViolationsForRule(
+        result,
+        '@stylistic/padding-line-between-statements',
+      );
+
+      // Only the missing blank line between export const and export function should warn
+      expect(paddingViolations).toHaveLength(1);
+      expect(paddingViolations[0].line).toBe(48);
+    });
   });
 
   describe('React Configuration Integration', () => {
