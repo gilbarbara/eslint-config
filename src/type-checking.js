@@ -12,5 +12,8 @@ export default [
         projectService: true,
       },
     },
+    rules: {
+      '@typescript-eslint/no-deprecated': 'warn',
+    },
   },
 ];

@@ -1,6 +1,12 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfigForFiles, getConfigPath, getRuleValue, hasPlugin } from '../utils/helpers.js';
+import {
+  getConfigForFiles,
+  getConfigPath,
+  getRuleValue,
+  hasPlugin,
+  isRuleConfigured,
+} from '../utils/helpers.js';
 
 describe('Testing Framework Configurations', () => {
   describe('Vitest Configuration', () => {
@@ -111,6 +117,10 @@ describe('Testing Framework Configurations', () => {
 
       expect(tsConfig).toBeDefined();
       expect(tsConfig.files.some(pattern => pattern.includes('.ts'))).toBe(true);
+    });
+
+    it('should configure no-deprecated rule', () => {
+      expect(isRuleConfigured(config, '@typescript-eslint/no-deprecated')).toBe(true);
     });
   });
 });
