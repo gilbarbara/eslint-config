@@ -118,6 +118,7 @@ describe('Base Configuration Rules', () => {
   describe('Plugins', () => {
     it('should have core plugins configured', () => {
       expect(hasPlugin(config, '@babel')).toBe(true);
+      expect(hasPlugin(config, '@stylistic')).toBe(true);
       expect(hasPlugin(config, 'import-x')).toBe(true);
       expect(hasPlugin(config, 'perfectionist')).toBe(true);
       expect(hasPlugin(config, 'promise')).toBe(true);

@@ -1,6 +1,7 @@
 import babelParser from '@babel/eslint-parser';
 import babelPlugin from '@babel/eslint-plugin';
 import { fixupPluginRules } from '@eslint/compat';
+import stylistic from '@stylistic/eslint-plugin';
 import importX from 'eslint-plugin-import-x';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
@@ -41,6 +42,7 @@ export default [
     },
     plugins: {
       '@babel': fixupPluginRules(babelPlugin),
+      '@stylistic': stylistic,
       'import-x': importX,
       perfectionist,
       promise,

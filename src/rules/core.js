@@ -28,8 +28,6 @@ export default {
   'no-empty-pattern': 'error',
   'no-ex-assign': 'error',
   'no-extra-boolean-cast': 'error',
-  'no-extra-parens': 'off',
-  'no-extra-semi': 'error',
   'no-fallthrough': 'error',
   'no-func-assign': 'error',
   'no-global-assign': [
@@ -42,7 +40,6 @@ export default {
   'no-invalid-regexp': 'error',
   'no-irregular-whitespace': 'error',
   'no-misleading-character-class': 'error',
-  'no-mixed-spaces-and-tabs': 'error',
   'no-obj-calls': 'error',
   'no-octal': 'error',
   'no-prototype-builtins': 'error',
@@ -82,7 +79,6 @@ export default {
   ],
   'default-case-last': 'error',
   'default-param-last': 'error',
-  'dot-location': ['error', 'property'],
   'dot-notation': [
     'error',
     {
@@ -117,7 +113,6 @@ export default {
   'no-extend-native': 'error',
   'no-extra-bind': 'error',
   'no-extra-label': 'error',
-  'no-floating-decimal': 'error',
   'no-implicit-coercion': 'off',
   'no-implicit-globals': 'off',
   'no-implied-eval': 'error',
@@ -133,12 +128,6 @@ export default {
   'no-lone-blocks': 'error',
   'no-loop-func': 'error',
   'no-magic-numbers': 'off',
-  'no-multi-spaces': [
-    'error',
-    {
-      ignoreEOLComments: false,
-    },
-  ],
   'no-multi-str': 'error',
   'no-new': 'error',
   'no-new-func': 'error',
@@ -206,13 +195,6 @@ export default {
   'require-await': 'off',
   'require-unicode-regexp': 'off',
   'vars-on-top': 'error',
-  'wrap-iife': [
-    'error',
-    'outside',
-    {
-      functionPrototypeMethods: false,
-    },
-  ],
   yoda: 'error',
   'init-declarations': 'off',
   'no-delete-var': 'error',
@@ -308,23 +290,8 @@ export default {
       requireReturnForObjectLiteral: false,
     },
   ],
-  'arrow-spacing': [
-    'error',
-    {
-      before: true,
-      after: true,
-    },
-  ],
   'constructor-super': 'error',
-  'generator-star-spacing': [
-    'error',
-    {
-      before: false,
-      after: true,
-    },
-  ],
   'no-class-assign': 'error',
-  'no-confusing-arrow': 'off',
   'no-const-assign': 'error',
   'no-dupe-class-members': 'error',
   'no-duplicate-imports': 'off',
@@ -393,61 +360,11 @@ export default {
   'prefer-spread': 'error',
   'prefer-template': 'error',
   'require-yield': 'error',
-  'rest-spread-spacing': ['error', 'never'],
   'sort-imports': 'off',
   'symbol-description': 'error',
-  'template-curly-spacing': 'error',
-  'yield-star-spacing': ['error', 'after'],
   curly: ['error', 'all'],
-  'global-require': 'off',
-  'lines-between-class-members': [
-    'error',
-    'always',
-    {
-      exceptAfterSingleLine: true,
-    },
-  ],
-  'newline-per-chained-call': [
-    'warn',
-    {
-      ignoreChainWithDepth: 5,
-    },
-  ],
   'no-plusplus': 'off',
   'no-restricted-syntax': ['error', 'LabeledStatement', 'WithStatement'],
-  'padding-line-between-statements': [
-    'warn',
-    {
-      blankLine: 'always',
-      prev: ['const', 'let', 'var'],
-      next: '*',
-    },
-    {
-      blankLine: 'any',
-      prev: ['const', 'let', 'var'],
-      next: ['const', 'let', 'var'],
-    },
-    {
-      blankLine: 'always',
-      prev: 'block-like',
-      next: '*',
-    },
-    {
-      blankLine: 'always',
-      prev: '*',
-      next: 'block-like',
-    },
-    {
-      blankLine: 'never',
-      prev: 'case',
-      next: 'block-like',
-    },
-    {
-      blankLine: 'always',
-      prev: '*',
-      next: 'return',
-    },
-  ],
   'sort-destructure-keys/sort-destructure-keys': [
     'error',
     {
