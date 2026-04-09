@@ -26,3 +26,12 @@ function badlyFormattedFunction( ){
   };
   return object;
 }
+
+// Test sonarjs - identical branches
+function sonarTest(x) {
+  if (x) {
+    return 1;
+  } else {
+    return 1;
+  }
+}

@@ -69,6 +69,13 @@ describe('ESLint Integration Tests', () => {
 
       expect(regexpViolations.length).toBeGreaterThan(0);
     });
+
+    it('should detect sonarjs issues', async () => {
+      const result = await lintFile(eslint, getFixturePath('sample-js.js'));
+      const sonarViolations = getViolationsForRule(result, 'sonarjs/no-all-duplicated-branches');
+
+      expect(sonarViolations.length).toBeGreaterThan(0);
+    });
   });
 
   describe('TypeScript Configuration Integration', () => {
