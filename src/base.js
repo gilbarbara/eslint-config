@@ -7,6 +7,7 @@ import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
 import promise from 'eslint-plugin-promise';
 import regexp from 'eslint-plugin-regexp';
+import sonarjs from 'eslint-plugin-sonarjs';
 import sortDestructureKeys from 'eslint-plugin-sort-destructure-keys';
 import unicorn from 'eslint-plugin-unicorn';
 import unusedImports from 'eslint-plugin-unused-imports';
@@ -17,6 +18,7 @@ import coreRules from './rules/core.js';
 import importRules from './rules/import.js';
 import promiseRules from './rules/promise.js';
 import regexpRules from './rules/regexp.js';
+import sonarjsRules from './rules/sonarjs.js';
 import stylisticRules from './rules/stylistic.js';
 import typescriptRules from './rules/typescript.js';
 import unicornRules from './rules/unicorn.js';
@@ -47,6 +49,7 @@ export default [
       perfectionist,
       promise,
       regexp,
+      sonarjs,
       'sort-destructure-keys': sortDestructureKeys,
       unicorn,
       'unused-imports': unusedImports,
@@ -65,6 +68,7 @@ export default [
       ...importRules,
       ...promiseRules,
       ...regexpRules,
+      ...sonarjsRules,
       ...stylisticRules,
       ...unicornRules,
       'unused-imports/no-unused-imports': 'error',

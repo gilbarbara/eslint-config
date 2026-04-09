@@ -123,6 +123,7 @@ describe('Base Configuration Rules', () => {
       expect(hasPlugin(config, 'perfectionist')).toBe(true);
       expect(hasPlugin(config, 'promise')).toBe(true);
       expect(hasPlugin(config, 'regexp')).toBe(true);
+      expect(hasPlugin(config, 'sonarjs')).toBe(true);
       expect(hasPlugin(config, 'sort-destructure-keys')).toBe(true);
       expect(hasPlugin(config, 'unicorn')).toBe(true);
       expect(hasPlugin(config, 'unused-imports')).toBe(true);
