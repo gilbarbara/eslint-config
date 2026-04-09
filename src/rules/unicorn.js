@@ -4,7 +4,7 @@ export default {
   'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
   'unicorn/custom-error-definition': 'warn',
   'unicorn/empty-brace-spaces': 'warn',
-  'unicorn/no-array-push-push': 'warn',
+  'unicorn/prefer-single-call': 'warn',
   'unicorn/no-await-expression-member': 'error',
   'unicorn/no-empty-file': 'error',
   'unicorn/no-for-loop': 'warn',
@@ -30,6 +30,7 @@ export default {
   'unicorn/prevent-abbreviations': [
     'warn',
     {
+      checkFilenames: false,
       replacements: {
         acc: false,
         db: false,

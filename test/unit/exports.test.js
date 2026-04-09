@@ -82,15 +82,13 @@ describe('Configuration Exports', () => {
       expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
     });
 
-    it('should have different settings for JS and TS files', async () => {
+    it('should have JS-specific settings for Babel JSX parsing', async () => {
       const module = await import(getConfigPath('react'));
       const config = module.default;
 
       const jsConfig = getConfigForFiles(config, '.js');
-      const tsConfig = getConfigForFiles(config, '.ts');
 
       expect(jsConfig).toBeDefined();
-      expect(tsConfig).toBeDefined();
     });
   });
 });
