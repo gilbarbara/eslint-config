@@ -50,6 +50,7 @@
     "@babel/eslint-plugin": "^7.27.1",
     "@babel/preset-react": "^7.28.5",
     "@eslint/compat": "^2.0.5",
+    "@stylistic/eslint-plugin": "^5.10.0",
     "@vitest/eslint-plugin": "^1.6.15",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",

@@ -8,6 +8,51 @@ const warnWithNaturalOrder = [
 const COMPONENTS = ['components', 'containers', 'pages', 'routes'];
 
 export default {
+  '@stylistic/lines-between-class-members': [
+    'error',
+    'always',
+    {
+      exceptAfterSingleLine: true,
+    },
+  ],
+  '@stylistic/padding-line-between-statements': [
+    'warn',
+    {
+      blankLine: 'always',
+      prev: ['const', 'let', 'var'],
+      next: '*',
+    },
+    {
+      blankLine: 'any',
+      prev: ['const', 'let', 'var'],
+      next: ['const', 'let', 'var'],
+    },
+    {
+      blankLine: 'always',
+      prev: 'block-like',
+      next: '*',
+    },
+    {
+      blankLine: 'always',
+      prev: '*',
+      next: 'block-like',
+    },
+    {
+      blankLine: 'never',
+      prev: 'case',
+      next: 'block-like',
+    },
+    {
+      blankLine: 'always',
+      prev: '*',
+      next: 'return',
+    },
+    {
+      blankLine: 'any',
+      prev: 'function-overload',
+      next: 'function-overload',
+    },
+  ],
   'perfectionist/sort-array-includes': warnWithNaturalOrder,
   'perfectionist/sort-exports': warnWithNaturalOrder,
   'perfectionist/sort-imports': [
