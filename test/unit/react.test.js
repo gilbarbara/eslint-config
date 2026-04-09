@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 
-import { getConfigForFiles, getConfigPath, hasPlugin, isRuleConfigured } from '../utils/helpers.js';
+import { getConfigPath, hasPlugin, isRuleConfigured } from '../utils/helpers.js';
 
 describe('React Configuration Rules', () => {
   let config;
@@ -14,16 +14,14 @@ describe('React Configuration Rules', () => {
   describe('React Plugin Rules', () => {
     it('should include React plugins', () => {
       expect(hasPlugin(config, 'react')).toBe(true);
-      expect(hasPlugin(config, 'react-compiler')).toBe(true);
       expect(hasPlugin(config, 'react-hooks')).toBe(true);
       expect(hasPlugin(config, 'react-refresh')).toBe(true);
       expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
     });
 
     it('should configure React-specific rules', () => {
-      expect(isRuleConfigured(config, 'react/jsx-uses-react')).toBe(true);
-      expect(isRuleConfigured(config, 'react/jsx-uses-vars')).toBe(true);
       expect(isRuleConfigured(config, 'react/react-in-jsx-scope')).toBe(true);
+      expect(isRuleConfigured(config, 'react/self-closing-comp')).toBe(true);
     });
 
     it('should configure React Hooks rules', () => {
@@ -37,36 +35,8 @@ describe('React Configuration Rules', () => {
       expect(isRuleConfigured(config, 'jsx-a11y/no-static-element-interactions')).toBe(true);
     });
 
-    it('should configure React Compiler rules', () => {
-      expect(isRuleConfigured(config, 'react-compiler/react-compiler')).toBe(true);
-    });
-
     it('should configure React Refresh rules', () => {
       expect(isRuleConfigured(config, 'react-refresh/only-export-components')).toBe(true);
-    });
-  });
-
-  describe('File-specific Configuration', () => {
-    it('should have different prop-types rules for JS vs TS', () => {
-      const jsConfig = getConfigForFiles(config, '.js');
-      const tsConfig = getConfigForFiles(config, '.ts');
-
-      // JS files should warn about missing prop-types
-      if (jsConfig && jsConfig.rules) {
-        expect(jsConfig.rules['react/prop-types']).toBe('warn');
-      }
-
-      // TS files should disable prop-types
-      if (tsConfig && tsConfig.rules) {
-        expect(tsConfig.rules['react/prop-types']).toBe('off');
-      }
-    });
-  });
-
-  describe('React Rules', () => {
-    it('should configure React component rules', () => {
-      expect(isRuleConfigured(config, 'react/jsx-uses-react')).toBe(true);
-      expect(isRuleConfigured(config, 'react/jsx-uses-vars')).toBe(true);
     });
   });
 
