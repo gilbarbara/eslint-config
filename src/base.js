@@ -2,6 +2,7 @@ import babelParser from '@babel/eslint-parser';
 import babelPlugin from '@babel/eslint-plugin';
 import { fixupPluginRules } from '@eslint/compat';
 import stylistic from '@stylistic/eslint-plugin';
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importX from 'eslint-plugin-import-x';
 import perfectionist from 'eslint-plugin-perfectionist';
 import prettier from 'eslint-plugin-prettier/recommended';
@@ -55,13 +56,12 @@ export default [
       'unused-imports': unusedImports,
     },
     settings: {
-      'import-x/resolver': {
-        node: {
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true,
           extensions: ['.js', '.jsx', '.ts', '.tsx'],
-          moduleDirectory: ['node_modules', './', './src'],
-        },
-        typescript: true,
-      },
+        }),
+      ],
     },
     rules: {
       ...coreRules,

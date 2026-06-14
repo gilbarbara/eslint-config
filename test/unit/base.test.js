@@ -109,9 +109,9 @@ describe('Base Configuration Rules', () => {
       const mainConfig = config[0];
 
       expect(mainConfig.settings).toBeDefined();
-      expect(mainConfig.settings['import-x/resolver']).toBeDefined();
-      expect(mainConfig.settings['import-x/resolver'].node).toBeDefined();
-      expect(mainConfig.settings['import-x/resolver'].typescript).toBe(true);
+      expect(mainConfig.settings['import-x/resolver-next']).toBeDefined();
+      expect(Array.isArray(mainConfig.settings['import-x/resolver-next'])).toBe(true);
+      expect(mainConfig.settings['import-x/resolver-next']).toHaveLength(1);
     });
   });
 
