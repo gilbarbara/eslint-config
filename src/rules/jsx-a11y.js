@@ -1,5 +1,5 @@
 export default {
-  'jsx-a11y/alt-text': [
+  'jsx-a11y-x/alt-text': [
     'error',
     {
       elements: ['img', 'object', 'area', 'input[type="image"]'],
@@ -9,8 +9,8 @@ export default {
       'input[type="image"]': [],
     },
   ],
-  'jsx-a11y/anchor-has-content': ['error', { components: [] }],
-  'jsx-a11y/anchor-is-valid': [
+  'jsx-a11y-x/anchor-has-content': ['error', { components: [] }],
+  'jsx-a11y-x/anchor-is-valid': [
     'error',
     {
       components: ['Link'],
@@ -18,14 +18,14 @@ export default {
       aspects: ['noHref', 'invalidHref', 'preferButton'],
     },
   ],
-  'jsx-a11y/aria-activedescendant-has-tabindex': 'error',
-  'jsx-a11y/aria-props': 'error',
-  'jsx-a11y/aria-proptypes': 'error',
-  'jsx-a11y/aria-role': ['error', { ignoreNonDOM: false }],
-  'jsx-a11y/aria-unsupported-elements': 'error',
-  'jsx-a11y/autocomplete-valid': 'warn',
-  'jsx-a11y/click-events-have-key-events': 'error',
-  'jsx-a11y/control-has-associated-label': [
+  'jsx-a11y-x/aria-activedescendant-has-tabindex': 'error',
+  'jsx-a11y-x/aria-props': 'error',
+  'jsx-a11y-x/aria-proptypes': 'error',
+  'jsx-a11y-x/aria-role': ['error', { ignoreNonDOM: false }],
+  'jsx-a11y-x/aria-unsupported-elements': 'error',
+  'jsx-a11y-x/autocomplete-valid': 'warn',
+  'jsx-a11y-x/click-events-have-key-events': 'error',
+  'jsx-a11y-x/control-has-associated-label': [
     'warn',
     {
       labelAttributes: ['label'],
@@ -46,12 +46,12 @@ export default {
       depth: 5,
     },
   ],
-  'jsx-a11y/heading-has-content': ['error', { components: [''] }],
-  'jsx-a11y/html-has-lang': 'error',
-  'jsx-a11y/iframe-has-title': 'error',
-  'jsx-a11y/img-redundant-alt': 'error',
-  'jsx-a11y/interactive-supports-focus': 'error',
-  'jsx-a11y/label-has-associated-control': [
+  'jsx-a11y-x/heading-has-content': ['error', { components: [''] }],
+  'jsx-a11y-x/html-has-lang': 'error',
+  'jsx-a11y-x/iframe-has-title': 'error',
+  'jsx-a11y-x/img-redundant-alt': 'error',
+  'jsx-a11y-x/interactive-supports-focus': 'error',
+  'jsx-a11y-x/label-has-associated-control': [
     'error',
     {
       labelComponents: [],
@@ -61,8 +61,8 @@ export default {
       depth: 25,
     },
   ],
-  'jsx-a11y/lang': 'error',
-  'jsx-a11y/media-has-caption': [
+  'jsx-a11y-x/lang': 'error',
+  'jsx-a11y-x/media-has-caption': [
     'error',
     {
       audio: [],
@@ -70,28 +70,28 @@ export default {
       track: [],
     },
   ],
-  'jsx-a11y/mouse-events-have-key-events': 'error',
-  'jsx-a11y/no-access-key': 'error',
-  'jsx-a11y/no-autofocus': ['error', { ignoreNonDOM: true }],
-  'jsx-a11y/no-distracting-elements': [
+  'jsx-a11y-x/mouse-events-have-key-events': 'error',
+  'jsx-a11y-x/no-access-key': 'error',
+  'jsx-a11y-x/no-autofocus': ['error', { ignoreNonDOM: true }],
+  'jsx-a11y-x/no-distracting-elements': [
     'error',
     {
       elements: ['marquee', 'blink'],
     },
   ],
-  'jsx-a11y/no-interactive-element-to-noninteractive-role': [
+  'jsx-a11y-x/no-interactive-element-to-noninteractive-role': [
     'error',
     {
       tr: ['none', 'presentation'],
     },
   ],
-  'jsx-a11y/no-noninteractive-element-interactions': [
+  'jsx-a11y-x/no-noninteractive-element-interactions': [
     'error',
     {
       handlers: ['onClick', 'onMouseDown', 'onMouseUp', 'onKeyPress', 'onKeyDown', 'onKeyUp'],
     },
   ],
-  'jsx-a11y/no-noninteractive-element-to-interactive-role': [
+  'jsx-a11y-x/no-noninteractive-element-to-interactive-role': [
     'error',
     {
       ul: ['listbox', 'menu', 'menubar', 'radiogroup', 'tablist', 'tree', 'treegrid'],
@@ -101,23 +101,22 @@ export default {
       td: ['gridcell'],
     },
   ],
-  'jsx-a11y/no-noninteractive-tabindex': [
+  'jsx-a11y-x/no-noninteractive-tabindex': [
     'error',
     {
       tags: [],
       roles: ['tabpanel'],
     },
   ],
-  'jsx-a11y/no-onchange': 'off',
-  'jsx-a11y/no-redundant-roles': 'error',
-  'jsx-a11y/no-static-element-interactions': [
+  'jsx-a11y-x/no-redundant-roles': 'error',
+  'jsx-a11y-x/no-static-element-interactions': [
     'error',
     {
       handlers: ['onClick', 'onMouseDown', 'onMouseUp', 'onKeyPress', 'onKeyDown', 'onKeyUp'],
     },
   ],
-  'jsx-a11y/role-has-required-aria-props': 'error',
-  'jsx-a11y/role-supports-aria-props': 'error',
-  'jsx-a11y/scope': 'error',
-  'jsx-a11y/tabindex-no-positive': 'error',
+  'jsx-a11y-x/role-has-required-aria-props': 'error',
+  'jsx-a11y-x/role-supports-aria-props': 'error',
+  'jsx-a11y-x/scope': 'error',
+  'jsx-a11y-x/tabindex-no-positive': 'error',
 };

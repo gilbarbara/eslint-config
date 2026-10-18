@@ -54,7 +54,6 @@ describe('Configuration Exports', () => {
       const module = await import(getConfigPath('base'));
       const config = module.default;
 
-      expect(hasPlugin(config, '@babel')).toBe(true);
       expect(hasPlugin(config, 'import-x')).toBe(true);
       expect(hasPlugin(config, 'perfectionist')).toBe(true);
       expect(hasPlugin(config, 'sort-destructure-keys')).toBe(true);
@@ -77,18 +76,17 @@ describe('Configuration Exports', () => {
       const module = await import(getConfigPath('react'));
       const config = module.default;
 
-      expect(hasPlugin(config, 'react')).toBe(true);
+      expect(hasPlugin(config, '@eslint-react')).toBe(true);
       expect(hasPlugin(config, 'react-hooks')).toBe(true);
-      expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
+      expect(hasPlugin(config, 'jsx-a11y-x')).toBe(true);
     });
 
-    it('should have JS-specific settings for Babel JSX parsing', async () => {
+    it('should apply the kit jsx-no-undef rule to all files', async () => {
       const module = await import(getConfigPath('react'));
       const config = module.default;
 
-      const jsConfig = getConfigForFiles(config, '.js');
-
-      expect(jsConfig).toBeDefined();
+      expect(config[0].files).toBeUndefined();
+      expect(config[0].rules['@gilbarbara/jsx-no-undef']).toBe('error');
     });
   });
 });

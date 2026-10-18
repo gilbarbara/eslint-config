@@ -1,23 +1,26 @@
-import jsxA11y from 'eslint-plugin-jsx-a11y';
-import react from 'eslint-plugin-react';
+import eslintReact from '@eslint-react/eslint-plugin';
+import stylistic from '@stylistic/eslint-plugin';
+import jsxA11y from 'eslint-plugin-jsx-a11y-x';
+import perfectionist from 'eslint-plugin-perfectionist';
 import reactHooks from 'eslint-plugin-react-hooks';
 import { reactRefresh } from 'eslint-plugin-react-refresh';
 
 import jsxA11yRules from './rules/jsx-a11y.js';
+import reactKit from './rules/react-kit.js';
 import reactRules from './rules/react.js';
 
 export default [
   {
     plugins: {
-      react,
+      '@eslint-react': eslintReact,
+      '@gilbarbara': reactKit,
+      // @stylistic and perfectionist are also registered in base; repeated so this config works
+      // on its own.
+      '@stylistic': stylistic,
+      perfectionist,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh.plugin,
-      'jsx-a11y': jsxA11y,
-    },
-    settings: {
-      react: {
-        version: 'detect',
-      },
+      'jsx-a11y-x': jsxA11y,
     },
     languageOptions: {
       parserOptions: {
@@ -33,15 +36,9 @@ export default [
     },
   },
 
-  // JS-specific React rules (Babel JSX parsing)
+  // ESLint only lints .js, .mjs and .cjs unless a config names other extensions; base does too,
+  // repeated so this config works on its own.
   {
-    files: ['**/*.js', '**/*.jsx'],
-    languageOptions: {
-      parserOptions: {
-        babelOptions: {
-          presets: ['@babel/preset-react'],
-        },
-      },
-    },
+    files: ['**/*.jsx'],
   },
 ];

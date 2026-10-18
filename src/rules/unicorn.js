@@ -1,5 +1,4 @@
 export default {
-  'unicorn/better-regex': 'warn',
   'unicorn/catch-error-name': 'warn',
   'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
   'unicorn/custom-error-definition': 'warn',
@@ -17,17 +16,17 @@ export default {
   'unicorn/prefer-array-some': 'warn',
   'unicorn/prefer-code-point': 'error',
   'unicorn/prefer-date-now': 'warn',
-  'unicorn/prefer-default-parameters': 'warn',
+  'unicorn/prefer-default-parameters': ['warn', { checkFallbackExpressions: false }],
   'unicorn/prefer-export-from': 'error',
   'unicorn/prefer-includes': 'warn',
   'unicorn/prefer-object-from-entries': 'warn',
   'unicorn/prefer-optional-catch-binding': 'warn',
   'unicorn/prefer-spread': 'warn',
   'unicorn/prefer-switch': 'warn',
-  'unicorn/prefer-ternary': 'warn',
+  'unicorn/prefer-ternary': 'off',
   'unicorn/prefer-top-level-await': 'off',
   'unicorn/prefer-type-error': 'warn',
-  'unicorn/prevent-abbreviations': [
+  'unicorn/name-replacements': [
     'warn',
     {
       checkFilenames: false,

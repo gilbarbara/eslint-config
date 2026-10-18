@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is `@gilbarbara/eslint-config`, a shared ESLint 9 flat config package that provides consistent linting rules for JavaScript and TypeScript projects. The package exports multiple configurations for different use cases including base rules, React rules, Node.js rules, and testing framework-specific rules.
+This is `@gilbarbara/eslint-config`, a shared ESLint 10 flat config package that provides consistent linting rules for JavaScript and TypeScript projects. The package exports multiple configurations for different use cases including base rules, React rules, Node.js rules, and testing framework-specific rules.
 
 ## Requirements
 
-- Node.js 20+
-- ESLint 9+
+- Node.js ^22.13.0 || >=24
+- ESLint 10.4+
 - Prettier 3
-- TypeScript 5 (for TS projects)
+- TypeScript 5 or 6.0 (for TS projects)
 
 ## Package Commands
 
@@ -25,13 +25,13 @@ This is `@gilbarbara/eslint-config`, a shared ESLint 9 flat config package that 
 
 ### Configuration Structure
 
-The package follows a modular architecture with ESLint 9 flat config format:
+The package follows a modular architecture with ESLint flat config format:
 
 - **Main entry** (`src/index.js`): Combines base and React configurations
 - **Base configuration** (`src/base.js`): Core rules for JavaScript/TypeScript without React
 - **Node.js configuration** (`src/node.js`): Node.js-specific rules
 - **React configuration** (`src/react.js`): React, hooks, and accessibility rules
-- **Testing configs**: Jest, Vitest, Testing Library
+- **Testing configs**: Vitest, Testing Library
 - **Type Checking** (`src/type-checking.js`): Strict TypeScript rules
 - **Rules organization**: All custom rules are organized in `src/rules/` directory
 
@@ -40,20 +40,18 @@ The package follows a modular architecture with ESLint 9 flat config format:
 1. **Base Config** (`src/base.js`):
    - Contains comprehensive ESLint rules and Prettier integration
    - Includes rules from: core, import-x, stylistic, typescript, unicorn, promise, regexp
-   - Supports both JavaScript (Babel parser) and TypeScript overrides
-   - Uses plugins: @babel, import-x, perfectionist, promise, regexp, sort-destructure-keys, unicorn, unused-imports
+   - JavaScript (including `.jsx`) uses ESLint's default parser; TypeScript files get typescript-eslint overrides
+   - Uses plugins: import-x, perfectionist, promise, regexp, sort-destructure-keys, unicorn, unused-imports
 
 2. **React Config** (`src/react.js`):
-   - Contains React, React Hooks, React Compiler, React Refresh, and JSX A11y rules
-   - Different rules for JS (prop-types warned) vs TS (prop-types disabled)
-   - Uses plugins: react, react-compiler, react-hooks, react-refresh, jsx-a11y
+   - Contains React, React Hooks, React Refresh, and JSX A11y rules
+   - Uses plugins: @eslint-react, @gilbarbara (kit rules from `src/rules/react-kit.js`), @stylistic (JSX style rules), perfectionist (JSX prop sorting), react-hooks, react-refresh, jsx-a11y-x
 
 3. **Node.js Config** (`src/node.js`):
    - Node.js-specific rules for deprecated APIs, path handling, promises
    - Uses plugin: eslint-plugin-n
 
 4. **Testing Configs**:
-   - **Jest**: Jest and Jest DOM rules with environment settings
    - **Vitest**: Vitest-specific rules
    - **Testing Library**: Testing Library plugin rules
    - **Type Checking**: Strict TypeScript type-checking rules requiring tsconfig.json
@@ -61,10 +59,10 @@ The package follows a modular architecture with ESLint 9 flat config format:
 ### Export Pattern
 
 The package.json exports field maps each configuration:
+
 ```
 "." -> src/index.js (base + react)
 "./base" -> src/base.js (no react)
-"./jest" -> src/jest.js
 "./node" -> src/node.js
 "./react" -> src/react.js
 "./testing-library" -> src/testing-library.js
@@ -82,6 +80,7 @@ Rules are categorized in `src/rules/`:
 - `node.js`: Node.js-specific rules
 - `promise.js`: Promise handling rules
 - `react.js`: React rules
+- `react-kit.js`: `@eslint-react/kit` rules rebuilding eslint-plugin-react rules that @eslint-react lacks
 - `regexp.js`: Regular expression rules
 - `stylistic.js`: Code formatting and style rules
 - `typescript.js`: TypeScript-specific rules
@@ -96,13 +95,15 @@ Rules are categorized in `src/rules/`:
 4. Add tests for the new rules
 
 ### Testing Changes
-- Uses `eslint.config.js` (ESLint 9 flat config format)
+
+- Uses `eslint.config.js` (ESLint flat config format)
 - Run `npm test` to execute all tests
 - Run `npm run validate` for full lint + test validation
 - Test fixtures are in `test/fixtures/`
 - Unit tests check config structure, integration tests run ESLint on fixtures
 
 ### Adding New Plugins
+
 1. Install the plugin: `pnpm add eslint-plugin-xxx`
 2. Create rules file in `src/rules/xxx.js`
 3. Import and configure in the appropriate config file
@@ -113,9 +114,10 @@ Rules are categorized in `src/rules/`:
 ## Peer Dependencies
 
 The package has optional peer dependencies:
-- `jest: 29 || 30` (optional)
-- `vitest: 2 || 3 || 4` (optional)
+
+- `eslint: ^10.4.0` (required)
+- `vitest: 4 - 5` (optional)
 - `prettier: 3` (required)
-- `typescript: 5` (required for TS projects)
+- `typescript: >=5 <6.1` (required for TS projects; typescript-eslint supports up to 6.0)
 
 When adding new rules or plugins, ensure compatibility with these version ranges and mark testing framework dependencies as optional in peerDependenciesMeta.

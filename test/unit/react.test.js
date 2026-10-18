@@ -13,15 +13,19 @@ describe('React Configuration Rules', () => {
 
   describe('React Plugin Rules', () => {
     it('should include React plugins', () => {
-      expect(hasPlugin(config, 'react')).toBe(true);
+      expect(hasPlugin(config, '@eslint-react')).toBe(true);
+      expect(hasPlugin(config, '@gilbarbara')).toBe(true);
+      expect(hasPlugin(config, '@stylistic')).toBe(true);
+      expect(hasPlugin(config, 'perfectionist')).toBe(true);
       expect(hasPlugin(config, 'react-hooks')).toBe(true);
       expect(hasPlugin(config, 'react-refresh')).toBe(true);
-      expect(hasPlugin(config, 'jsx-a11y')).toBe(true);
+      expect(hasPlugin(config, 'jsx-a11y-x')).toBe(true);
     });
 
     it('should configure React-specific rules', () => {
-      expect(isRuleConfigured(config, 'react/react-in-jsx-scope')).toBe(true);
-      expect(isRuleConfigured(config, 'react/self-closing-comp')).toBe(true);
+      expect(isRuleConfigured(config, '@eslint-react/no-array-index-key')).toBe(true);
+      expect(isRuleConfigured(config, '@gilbarbara/jsx-no-undef')).toBe(true);
+      expect(isRuleConfigured(config, '@stylistic/jsx-self-closing-comp')).toBe(true);
     });
 
     it('should configure React Hooks rules', () => {
@@ -30,9 +34,9 @@ describe('React Configuration Rules', () => {
     });
 
     it('should configure JSX A11y rules', () => {
-      expect(isRuleConfigured(config, 'jsx-a11y/alt-text')).toBe(true);
-      expect(isRuleConfigured(config, 'jsx-a11y/click-events-have-key-events')).toBe(true);
-      expect(isRuleConfigured(config, 'jsx-a11y/no-static-element-interactions')).toBe(true);
+      expect(isRuleConfigured(config, 'jsx-a11y-x/alt-text')).toBe(true);
+      expect(isRuleConfigured(config, 'jsx-a11y-x/click-events-have-key-events')).toBe(true);
+      expect(isRuleConfigured(config, 'jsx-a11y-x/no-static-element-interactions')).toBe(true);
     });
 
     it('should configure React Refresh rules', () => {

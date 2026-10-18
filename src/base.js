@@ -1,6 +1,3 @@
-import babelParser from '@babel/eslint-parser';
-import babelPlugin from '@babel/eslint-plugin';
-import { fixupPluginRules } from '@eslint/compat';
 import stylistic from '@stylistic/eslint-plugin';
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript';
 import importX from 'eslint-plugin-import-x';
@@ -27,7 +24,7 @@ import unicornRules from './rules/unicorn.js';
 export default [
   {
     languageOptions: {
-      ecmaVersion: 2022,
+      ecmaVersion: 'latest',
       sourceType: 'module',
       globals: {
         ...globals.node,
@@ -44,7 +41,6 @@ export default [
       reportUnusedDisableDirectives: true,
     },
     plugins: {
-      '@babel': fixupPluginRules(babelPlugin),
       '@stylistic': stylistic,
       'import-x': importX,
       perfectionist,
@@ -84,15 +80,9 @@ export default [
     },
   },
 
-  // JavaScript files with Babel parser
+  // ESLint only lints .js, .mjs and .cjs unless a config names other extensions.
   {
-    files: ['**/*.js', '**/*.jsx'],
-    languageOptions: {
-      parser: babelParser,
-      parserOptions: {
-        requireConfigFile: false,
-      },
-    },
+    files: ['**/*.jsx'],
   },
 
   // TypeScript files
