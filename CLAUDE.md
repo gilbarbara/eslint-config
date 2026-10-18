@@ -45,7 +45,7 @@ The package follows a modular architecture with ESLint flat config format:
 
 2. **React Config** (`src/react.js`):
    - Contains React, React Hooks, React Refresh, and JSX A11y rules
-   - Uses plugins: @eslint-react, @gilbarbara (kit rules from `src/rules/react-kit.js`), @stylistic (JSX style rules), perfectionist (JSX prop sorting), react-hooks, react-refresh, jsx-a11y-x
+   - Uses plugins: @eslint-react, @gilbarbara (kit rules from `src/rules/react-kit/`), @stylistic (JSX style rules), perfectionist (JSX prop sorting), react-hooks, react-refresh, jsx-a11y-x
 
 3. **Node.js Config** (`src/node.js`):
    - Node.js-specific rules for deprecated APIs, path handling, promises
@@ -80,7 +80,7 @@ Rules are categorized in `src/rules/`:
 - `node.js`: Node.js-specific rules
 - `promise.js`: Promise handling rules
 - `react.js`: React rules
-- `react-kit.js`: `@eslint-react/kit` rules rebuilding eslint-plugin-react rules that @eslint-react lacks
+- `react-kit/`: `@eslint-react/kit` rules rebuilding eslint-plugin-react rules that @eslint-react lacks, one file per rule; helpers used by 2+ rules live in `utils.js`
 - `regexp.js`: Regular expression rules
 - `stylistic.js`: Code formatting and style rules
 - `typescript.js`: TypeScript-specific rules
@@ -101,6 +101,8 @@ Rules are categorized in `src/rules/`:
 - Run `npm run validate` for full lint + test validation
 - Test fixtures are in `test/fixtures/`
 - Unit tests check config structure, integration tests run ESLint on fixtures
+- `test/rules/<rule>.test.js` tests each `@gilbarbara/*` rule with ESLint's `RuleTester`; give every autofixed case an `output` (`null` when the rule reports without fixing)
+- `test/rules/fix-safety.test.js` checks every autofix parses, keeps the input's identifiers, literals and comments, and is stable; add new fix paths and input shapes to its matrix
 
 ### Adding New Plugins
 

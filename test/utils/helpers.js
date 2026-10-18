@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { ESLint, Linter } from 'eslint';
+import { ESLint } from 'eslint';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -14,39 +14,6 @@ export async function createESLintWithConfig(configPath) {
     overrideConfig: config,
     ignore: false,
   });
-}
-
-/**
- * Runs a single @gilbarbara/* kit rule on `code` and applies its fixes. `options` is the rule's
- * options array; without it, the rule runs with this config's settings.
- */
-export async function fixWithKitRule(
-  rule,
-  code,
-  extension = 'jsx',
-  { languageOptions, options } = {},
-) {
-  const { default: reactKit } = await import(
-    path.resolve(__dirname, '../../src/rules/react-kit.js')
-  );
-  const { default: reactRules } = await import(path.resolve(__dirname, '../../src/rules/react.js'));
-  const { default: tseslint } = await import('typescript-eslint');
-  const ruleId = `@gilbarbara/${rule}`;
-  const linter = new Linter({ configType: 'flat' });
-  const config = [
-    {
-      files: [`**/*.${extension}`],
-      languageOptions: {
-        ...(extension === 'tsx' && { parser: tseslint.parser }),
-        parserOptions: { ecmaFeatures: { jsx: true } },
-        ...languageOptions,
-      },
-      plugins: { '@gilbarbara': reactKit },
-      rules: { [ruleId]: options ? ['error', ...options] : reactRules[ruleId] },
-    },
-  ];
-
-  return linter.verifyAndFix(code, config, `component.${extension}`);
 }
 
 /**

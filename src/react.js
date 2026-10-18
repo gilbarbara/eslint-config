@@ -6,7 +6,7 @@ import reactHooks from 'eslint-plugin-react-hooks';
 import { reactRefresh } from 'eslint-plugin-react-refresh';
 
 import jsxA11yRules from './rules/jsx-a11y.js';
-import reactKit from './rules/react-kit.js';
+import reactKit from './rules/react-kit/index.js';
 import reactRules from './rules/react.js';
 
 export default [
