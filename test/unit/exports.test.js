@@ -14,7 +14,7 @@ describe('Configuration Exports', () => {
 
         expect(config).toBeDefined();
         expect(Array.isArray(config)).toBe(true);
-      });
+      }, 15_000); // The first import loads every plugin.
 
       it('should have configuration objects', async () => {
         const configPath = getConfigPath(configName);

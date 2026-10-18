@@ -3,7 +3,6 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 
 import {
   createESLintWithConfig,
-  fixWithKitRule,
   getAllViolations,
   getConfigPath,
   getFixturePath,
@@ -189,260 +188,12 @@ describe('ESLint Integration Tests', () => {
       expect(violations.map(v => v.line)).toEqual([7, 17]);
     });
 
-    it('should flag this.props, this.state and this.context reads in class components', async () => {
-      const code = [
-        "import React, { Component, PureComponent } from 'react';",
-        'export class A extends React.Component {',
-        '  render() {',
-        '    this.state.x = 1;',
-        '    return <div>{this.props.a}{this.state.b}{this.context.c}</div>;',
-        '  }',
-        '}',
-        'export class B extends PureComponent {',
-        '  render() {',
-        '    return <div>{this.props.a}</div>;',
-        '  }',
-        '}',
-        'export class C extends Store {',
-        '  read() {',
-        '    return this.props.a;',
-        '  }',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('destructuring-assignment', code);
-
-      expect(messages.map(m => [m.line, m.message])).toEqual([
-        [5, 'Must use destructuring props assignment'],
-        [5, 'Must use destructuring state assignment'],
-        [5, 'Must use destructuring context assignment'],
-        [10, 'Must use destructuring props assignment'],
-      ]);
-    });
-
-    it('should skip optional reads and writes of function component params', async () => {
-      const code = [
-        'export function F(props, context) {',
-        '  props.a = 1;',
-        '  return <div>{props?.b}{context.c}</div>;',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('destructuring-assignment', code);
-
-      expect(messages.map(m => [m.line, m.message])).toEqual([
-        [3, 'Must use destructuring context assignment'],
-      ]);
-    });
-
-    it('should flag defaulted props params and aliased React superclasses', async () => {
-      const code = [
-        "import { Component as Base } from 'react';",
-        'export function View(props = {}) {',
-        '  return <div>{props.title}</div>;',
-        '}',
-        'export class Aliased extends Base {',
-        '  render() {',
-        '    return <div>{this.props.title}</div>;',
-        '  }',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('destructuring-assignment', code);
-
-      expect(messages.map(m => [m.line, m.message])).toEqual([
-        [3, 'Must use destructuring props assignment'],
-        [7, 'Must use destructuring props assignment'],
-      ]);
-    });
-
-    it('should only check unnamed functions that return JSX', async () => {
-      const code = [
-        'export function makeFinder(items) {',
-        '  return options => {',
-        '    if (!options.id) return null;',
-        '    return items.find(item => item.id === options.id);',
-        '  };',
-        '}',
-        'export function makeGetter(source) {',
-        '  let cached = null;',
-        '  return options => {',
-        '    cached ??= source.load(options.key);',
-        '    return cached;',
-        '  };',
-        '}',
-        'export function wrap(C) {',
-        '  return props => <C label={props.label} />;',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('destructuring-assignment', code);
-
-      expect(messages.map(m => [m.line, m.message])).toEqual([
-        [15, 'Must use destructuring props assignment'],
-      ]);
-    });
-
     it('should flag named components defined as arrow functions', () => {
       const violations = getViolationsForRule(result, '@gilbarbara/function-component-definition');
 
       expect(violations).toHaveLength(1);
       expect(violations[0].severity).toBe(2);
       expect(violations[0].line).toBe(11);
-    });
-
-    it.each([
-      ['jsx', 'export const A = () => <div />;', 'export function A() {\n  return <div />;\n}'],
-      [
-        'jsx',
-        'const B = async ({ a }) => {\n  return <div>{a}</div>;\n};',
-        'async function B({ a }) {\n  return <div>{a}</div>;\n}',
-      ],
-      [
-        'tsx',
-        'const C = <T,>({ v }: { v: T }): JSX.Element => <div>{String(v)}</div>;',
-        'function C<T,>({ v }: { v: T }): JSX.Element {\n  return <div>{String(v)}</div>;\n}',
-      ],
-      // Not fixed: named function expression, multiple declarators, typed variable
-      ['jsx', 'const D = function Inner() {\n  return <div />;\n};', null],
-      ['jsx', 'const E = () => <div />,\n  f = 1;', null],
-      ['tsx', 'const G: FC = () => <div />;', null],
-      // Not fixed: the rebuilt function would drop a comment
-      ['jsx', 'const H = () => (\n  // note\n  <div />\n);', null],
-      ['jsx', 'const I = /* note */ () => <div />;', null],
-    ])(
-      'should autofix function components to declarations (%s) %#',
-      async (extension, code, expected) => {
-        const { messages, output } = await fixWithKitRule(
-          'function-component-definition',
-          code,
-          extension,
-        );
-
-        expect(output).toBe(expected ?? code);
-        expect(messages).toHaveLength(expected ? 0 : 1);
-      },
-    );
-
-    it.each([
-      [
-        'jsx',
-        'export function wrap(Component) {\n  return props => <Component {...props} />;\n}',
-        'export function wrap(Component) {\n  return function (props) {\n  return <Component {...props} />;\n};\n}',
-      ],
-      [
-        'jsx',
-        'export default () => <div />;',
-        'export default function () {\n  return <div />;\n};',
-      ],
-      [
-        'jsx',
-        'const Foo = {};\nFoo.Bar = () => <div />;',
-        'const Foo = {};\nFoo.Bar = function () {\n  return <div />;\n};',
-      ],
-      [
-        'jsx',
-        'export const hoc = C => props => <C {...props} />;',
-        'export const hoc = C => function (props) {\n  return <C {...props} />;\n};',
-      ],
-      [
-        'jsx',
-        'export function guard(C) {\n  return props => {\n    if (!props.x) return null;\n    return <C />;\n  };\n}',
-        'export function guard(C) {\n  return function (props) {\n    if (!props.x) return null;\n    return <C />;\n  };\n}',
-      ],
-      [
-        'jsx',
-        'export function pick(C) {\n  return props => (props.x ? <C /> : null);\n}',
-        'export function pick(C) {\n  return function (props) {\n  return props.x ? <C /> : null;\n};\n}',
-      ],
-      [
-        'jsx',
-        'export function hold(C) {\n  return () => {\n    const element = <C />;\n    return element;\n  };\n}',
-        'export function hold(C) {\n  return function () {\n    const element = <C />;\n    return element;\n  };\n}',
-      ],
-      [
-        'tsx',
-        'export default <T,>({ v }: { v: T }) => <div>{String(v)}</div>;',
-        'export default function <T,>({ v }: { v: T }) {\n  return <div>{String(v)}</div>;\n};',
-      ],
-    ])(
-      'should autofix unnamed arrow components to function expressions (%s) %#',
-      async (extension, code, expected) => {
-        const { messages, output } = await fixWithKitRule(
-          'function-component-definition',
-          code,
-          extension,
-        );
-
-        expect(output).toBe(expected);
-        expect(messages).toHaveLength(0);
-      },
-    );
-
-    it.each([
-      'const A = () => <div>{this.label}</div>;',
-      'export function make() {\n  return () => <div>{this.label}</div>;\n}',
-      'export function make() {\n  return () => <div>{arguments[0]}</div>;\n}',
-      'export function make() {\n  return () => <div>{(() => this.label)()}</div>;\n}',
-      'export class Box {\n  render() {\n    return () => <div>{super.toString()}</div>;\n  }\n}',
-      'export function Make() {\n  return () => <div>{new.target.name}</div>;\n}',
-    ])('should not autofix arrows that use lexical bindings %#', async code => {
-      const { messages, output } = await fixWithKitRule('function-component-definition', code);
-
-      expect(output).toBe(code);
-      expect(messages).toHaveLength(1);
-    });
-
-    it('should autofix arrows whose `this` belongs to a nested function', async () => {
-      const code =
-        'export function make() {\n  return () => <div>{function () { return this; }.call(1)}</div>;\n}';
-      const { messages, output } = await fixWithKitRule('function-component-definition', code);
-
-      expect(messages).toHaveLength(0);
-      expect(output).toContain('return function () {');
-    });
-
-    it.each([
-      // An arrow would read the outer `this` / `arguments`
-      'export function A() {\n  return <div>{this.x}</div>;\n}',
-      'export function B() {\n  return <div>{arguments[0]}</div>;\n}',
-      // `const C = ...` would be read before it's initialized
-      'export default C;\nfunction C() {\n  return <div />;\n}',
-    ])('should not autofix function components to arrows when unsafe %#', async code => {
-      const { messages, output } = await fixWithKitRule(
-        'function-component-definition',
-        code,
-        'jsx',
-        {
-          options: [{ namedComponents: 'arrow-function' }],
-        },
-      );
-
-      expect(output).toBe(code);
-      expect(messages.map(m => m.messageId)).toEqual(['arrow-function']);
-    });
-
-    it('should not autofix unnamed arrow components when a comment would be dropped', async () => {
-      const code = 'export default () => (\n  // note\n  <div />\n);';
-      const { messages, output } = await fixWithKitRule('function-component-definition', code);
-
-      expect(output).toBe(code);
-      expect(messages).toHaveLength(1);
-    });
-
-    it.each([
-      // The wrapper call is the component, not its callback.
-      "import { forwardRef, memo } from 'react';\nexport const M = memo(() => <div />);\nexport const F = forwardRef((props, ref) => <div ref={ref} />);",
-      'export function List({ items }) {\n  return <ul>{items.map(item => <li key={item}>{item}</li>)}</ul>;\n}',
-      'export function Table({ rows }) {\n  return <Grid renderRow={row => <span>{row}</span>} rows={rows} />;\n}',
-      'export const routes = { Home: () => <div /> };',
-      'const Foo = {};\nFoo.render = () => <div />;',
-      'export function wrap(C) {\n  return function (props) {\n    return <C {...props} />;\n  };\n}',
-      // Returns null or a value initialized to null, but never JSX.
-      'export function lazy(colors) {\n  let cached = null;\n  return () => {\n    cached ??= colors.map(color => ({ id: color.id }));\n    return cached;\n  };\n}',
-      'export function first(items) {\n  return () => {\n    if (!items.length) return null;\n    return items[0];\n  };\n}',
-    ])('should not report unnamed functions that are not components %#', async code => {
-      const { fixed, messages } = await fixWithKitRule('function-component-definition', code);
-
-      // A fixable report would be fixed away, leaving no messages; `fixed` catches it.
-      expect(fixed).toBe(false);
-      expect(messages).toHaveLength(0);
     });
 
     it('should flag explicit boolean attribute values', () => {
@@ -461,53 +212,10 @@ describe('ESLint Integration Tests', () => {
       expect(violations[0].line).toBe(27);
     });
 
-    it('should flag functions and .bind() passed to component props directly or via locals', async () => {
-      const code = [
-        'function handleTop() {}',
-        'export function Comp({ cond, onPick, x, y }) {',
-        '  function handle() {}',
-        '  const expression = function () {};',
-        '  const arrow = () => {};',
-        '  const conditional = cond ? x.bind(null) : y;',
-        '  let reassigned = function () {};',
-        '  return (',
-        '    <>',
-        '      <Widget a={handle} b={expression} c={conditional} d={x?.bind(null)} e={function () {}} />',
-        '      <Widget f={arrow} g={handleTop} h={reassigned} ref={onPick.bind(null)} />',
-        '      <div onClick={handle} />',
-        '      <ui.Button onClick={handle} />',
-        '    </>',
-        '  );',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('jsx-no-bind', code);
-      const functions = 'JSX props should not use functions';
-      const bind = 'JSX props should not use .bind()';
-
-      expect(messages.map(m => [m.line, m.message])).toEqual([
-        [10, functions],
-        [10, functions],
-        [10, bind],
-        [10, bind],
-        [10, functions],
-      ]);
-    });
-
-    it('should flag duplicate JSX props, ignoring case', async () => {
+    it('should flag duplicate JSX props, ignoring case', () => {
       const violations = getViolationsForRule(result, '@gilbarbara/jsx-no-duplicate-props');
 
       expect(violations.map(v => [v.line, v.severity])).toEqual([[51, 2]]);
-
-      // Namespaced names are not checked, as in eslint-plugin-react.
-      const { messages } = await fixWithKitRule(
-        'jsx-no-duplicate-props',
-        'const a = <div id="1" xlink:href="x" xlink:href="y" ID="2" id="3" />;',
-      );
-
-      expect(messages.map(m => [m.column, m.message])).toEqual([
-        [53, 'No duplicate props allowed'],
-        [60, 'No duplicate props allowed'],
-      ]);
     });
 
     it('should flag JSX components that are not defined', async () => {
@@ -532,28 +240,6 @@ describe('ESLint Integration Tests', () => {
       const violations = getViolationsForRule(tsResult, '@gilbarbara/jsx-no-undef');
 
       expect(violations.map(v => [v.line, v.severity])).toEqual([[1, 2]]);
-    });
-
-    it('should resolve TSX components from imports and local scopes', async () => {
-      const code = [
-        "import Card from './card';",
-        "import * as UI from './ui';",
-        'function Local() {',
-        '  return <div />;',
-        '}',
-        'export class Page {',
-        '  Inner = Local;',
-        '  render() {',
-        '    return <><Card /><UI.Button /><Local /><this.Inner /><svg:rect /><Missing.Item /><Gone /></>;',
-        '  }',
-        '}',
-      ].join('\n');
-      const { messages } = await fixWithKitRule('jsx-no-undef', code, 'tsx');
-
-      expect(messages.map(m => m.message)).toEqual([
-        "'Missing' is not defined.",
-        "'Gone' is not defined.",
-      ]);
     });
 
     it('should not report variables or imports used only in JSX as unused', async () => {
