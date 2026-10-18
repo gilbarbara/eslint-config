@@ -28,7 +28,7 @@ describe('Base Configuration Rules', () => {
     });
 
     it('should configure unicorn rules', () => {
-      expect(isRuleConfigured(config, 'unicorn/better-regex')).toBe(true);
+      expect(isRuleConfigured(config, 'unicorn/name-replacements')).toBe(true);
       expect(isRuleConfigured(config, 'unicorn/no-for-loop')).toBe(true);
     });
 
@@ -87,10 +87,13 @@ describe('Base Configuration Rules', () => {
 
   describe('Parser Configuration', () => {
     it('should use correct parsers for different file types', () => {
-      const jsConfig = getConfigForFiles(config, '.js');
+      const jsxConfig = getConfigForFiles(config, '.jsx');
       const tsConfig = getConfigForFiles(config, '.ts');
 
-      expect(jsConfig.languageOptions.parser).toBeDefined();
+      // JavaScript uses ESLint's default parser with the latest syntax; .jsx must be listed
+      // explicitly or ESLint skips it.
+      expect(jsxConfig).toEqual({ files: ['**/*.jsx'] });
+      expect(config[0].languageOptions.ecmaVersion).toBe('latest');
       expect(tsConfig.languageOptions.parser).toBeDefined();
     });
   });
@@ -117,7 +120,6 @@ describe('Base Configuration Rules', () => {
 
   describe('Plugins', () => {
     it('should have core plugins configured', () => {
-      expect(hasPlugin(config, '@babel')).toBe(true);
       expect(hasPlugin(config, '@stylistic')).toBe(true);
       expect(hasPlugin(config, 'import-x')).toBe(true);
       expect(hasPlugin(config, 'perfectionist')).toBe(true);
