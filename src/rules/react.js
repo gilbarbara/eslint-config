@@ -16,7 +16,7 @@ export default {
   '@eslint-react/jsx-no-children-prop': 'error',
   '@eslint-react/jsx-no-comment-textnodes': 'error',
   '@eslint-react/jsx-no-namespace': 'error',
-  '@eslint-react/jsx-no-useless-fragment': ['error', { allowExpressions: false }],
+  '@eslint-react/jsx-no-useless-fragment': ['error', { allowExpressions: true }],
   '@eslint-react/no-array-index-key': 'warn',
   '@eslint-react/no-component-will-mount': 'error',
   '@eslint-react/no-component-will-receive-props': 'error',

@@ -1,7 +1,7 @@
 export default {
   'unicorn/catch-error-name': 'warn',
   'unicorn/consistent-function-scoping': ['warn', { checkArrowFunctions: false }],
-  'unicorn/custom-error-definition': 'warn',
+  'unicorn/custom-error-definition': 'off',
   'unicorn/empty-brace-spaces': 'warn',
   'unicorn/prefer-single-call': 'warn',
   'unicorn/no-await-expression-member': 'error',
@@ -32,6 +32,9 @@ export default {
       checkFilenames: false,
       replacements: {
         acc: false,
+        application: false,
+        applications: false,
+        configuration: false,
         db: false,
         dev: false,
         el: false,

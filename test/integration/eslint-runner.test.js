@@ -150,6 +150,24 @@ describe('ESLint Integration Tests', () => {
       ]);
     });
 
+    it('should allow fragments wrapping a single expression but not a single element', async () => {
+      const reactOnly = await createESLintWithConfig(getConfigPath('react'));
+      const [result] = await reactOnly.lintText(
+        [
+          'export const list = items => <>{items.map(item => <li key={item}>{item}</li>)}</>;',
+          'export const single = <><span /></>;',
+          '',
+        ].join('\n'),
+        { filePath: getFixturePath('inline.jsx') },
+      );
+      const fragmentViolations = getViolationsForRule(
+        result,
+        '@eslint-react/jsx-no-useless-fragment',
+      );
+
+      expect(fragmentViolations.map(v => v.line)).toEqual([2]);
+    });
+
     it('should detect React Hook dependency issues', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
       const hookViolations = getViolationsForRule(result, 'react-hooks/exhaustive-deps');
