@@ -4,6 +4,7 @@ import jsxA11y from 'eslint-plugin-jsx-a11y-x';
 import perfectionist from 'eslint-plugin-perfectionist';
 import reactHooks from 'eslint-plugin-react-hooks';
 import { reactRefresh } from 'eslint-plugin-react-refresh';
+import globals from 'globals';
 
 import jsxA11yRules from './rules/jsx-a11y.js';
 import reactKit from './rules/react-kit/index.js';
@@ -23,6 +24,9 @@ export default [
       'jsx-a11y-x': jsxA11y,
     },
     languageOptions: {
+      globals: {
+        ...globals.browser,
+      },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,

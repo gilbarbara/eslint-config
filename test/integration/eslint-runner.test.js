@@ -168,6 +168,21 @@ describe('ESLint Integration Tests', () => {
       expect(fragmentViolations.map(v => v.line)).toEqual([2]);
     });
 
+    it.each(['inline.jsx', 'inline.tsx'])('should accept browser globals in %s', async file => {
+      const [result] = await eslint.lintText(
+        [
+          'export const title = document.title;',
+          'export const top = window.scrollY + (document.scrollingElement?.scrollTop ?? 0);',
+          '',
+        ].join('\n'),
+        { filePath: getFixturePath(file) },
+      );
+      const ruleIds = result.messages.map(m => m.ruleId);
+
+      expect(ruleIds).not.toContain('no-undef');
+      expect(ruleIds).not.toContain('unicorn/no-optional-chaining-on-undeclared-variable');
+    });
+
     it('should detect React Hook dependency issues', async () => {
       const result = await lintFile(eslint, getFixturePath('sample-react.tsx'));
       const hookViolations = getViolationsForRule(result, 'react-hooks/exhaustive-deps');

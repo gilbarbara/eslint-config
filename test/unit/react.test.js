@@ -53,5 +53,12 @@ describe('React Configuration Rules', () => {
       expect(mainConfig.languageOptions.parserOptions.ecmaFeatures).toBeDefined();
       expect(mainConfig.languageOptions.parserOptions.ecmaFeatures.jsx).toBe(true);
     });
+
+    it('should declare browser globals', () => {
+      const { globals } = config[0].languageOptions;
+
+      expect(globals.document).toBeDefined();
+      expect(globals.window).toBeDefined();
+    });
   });
 });
